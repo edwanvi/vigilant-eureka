@@ -56,10 +56,10 @@ public class MovingCastleDoorTile extends TileEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        double pos_x = compound.getInteger("x");
-        double pos_y = compound.getInteger("y");
-        double pos_z = compound.getInteger("z");
-        int dim = compound.getInteger("dim");
+        double pos_x = compound.getInteger("destination_x");
+        double pos_y = compound.getInteger("destination_y");
+        double pos_z = compound.getInteger("destination_z");
+        int dim = compound.getInteger("destination_dim");
         FullPosition destination = new FullPosition(pos_x, pos_y, pos_z, dim);
         this.setDestination(destination);
         System.out.println("read " + dest_pos.getX() + " " + dest_pos.getY() + " " + dest_pos.getZ() + " from NBT");
@@ -69,10 +69,10 @@ public class MovingCastleDoorTile extends TileEntity {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         System.out.println("writing " + dest_pos.getX() + " " + dest_pos.getY() + " " + dest_pos.getZ() + " to NBT");
-        compound.setInteger("x", this.dest_pos.getX());
-        compound.setInteger("y", this.dest_pos.getY());
-        compound.setInteger("z", this.dest_pos.getZ());
-        compound.setInteger("dim", this.dest_pos.getDimension());
+        compound.setInteger("destination_x", this.dest_pos.getX());
+        compound.setInteger("destination_y", this.dest_pos.getY());
+        compound.setInteger("destination_z", this.dest_pos.getZ());
+        compound.setInteger("destination_dim", this.dest_pos.getDimension());
         return compound;
     }
 }
