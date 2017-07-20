@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
@@ -33,7 +33,7 @@ public class CommonProxy {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(new BasicBlock());
         event.getRegistry().register(new MovingCastleDoor());
-        GameRegistry.registerTileEntity(MovingCastleDoorTile.class, Reference.MOD_ID + "_castledoor");
+        GameRegistry.registerTileEntity(MovingCastleDoorTile.class, Reference.MOD_ID + ":castledoor");
     }
 
     @SubscribeEvent
