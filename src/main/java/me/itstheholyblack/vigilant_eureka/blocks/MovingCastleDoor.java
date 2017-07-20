@@ -69,10 +69,6 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
     }
 
     private boolean canBlockStay(World worldIn, BlockPos pos) {
-        if (worldIn.getBlockState(pos.up()).getBlock().equals(ModBlocks.movingdoor)
-                || worldIn.getBlockState(pos.down()).getBlock().equals(ModBlocks.movingdoor)) {
-            return true;
-        }
         return worldIn.getBlockState(pos.up()).getBlock().equals(ModBlocks.movingdoor)
                 || worldIn.getBlockState(pos.down()).getBlock().equals(ModBlocks.movingdoor);
     }
