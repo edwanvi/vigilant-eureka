@@ -15,22 +15,6 @@ public class MovingCastleDoorTile extends TileEntity {
         // new Exception().printStackTrace(System.out);
         this.dest_pos = position;
         System.out.println("setting dest to " + position.getX() + " " + position.getY() + " " + position.getZ());
-        TileEntity otherTile;
-        try {
-            otherTile = this.world.getTileEntity(this.getPos().up());
-        } catch (NullPointerException e) {
-            try {
-                otherTile = this.world.getTileEntity(this.getPos().down());
-            } catch (NullPointerException ex) {
-                System.out.println("Other tile most certainly null.");
-                markDirty();
-                return;
-            }
-        }
-        if (otherTile instanceof MovingCastleDoorTile) {
-            ((MovingCastleDoorTile) otherTile).setDestination_NoOther(this.dest_pos);
-        }
-        System.out.println("Final destination is " + position.getX() + " " + position.getY() + " " + position.getZ());
         markDirty();
     }
 

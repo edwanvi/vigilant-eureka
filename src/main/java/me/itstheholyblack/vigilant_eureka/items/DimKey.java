@@ -3,6 +3,9 @@ package me.itstheholyblack.vigilant_eureka.items;
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.util.RayTraceHelper;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -92,4 +96,23 @@ public class DimKey extends Item {
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ModelResourceLocation normalModel = new ModelResourceLocation(getRegistryName() + "_normal", "inventory");
+        ModelResourceLocation activeModel = new ModelResourceLocation(getRegistryName() + "_active", "inventory");
+
+        ModelBakery.registerItemVariants(this, normalModel, activeModel);
+
+        ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                int y = getTagCompoundSafe(stack).getInteger("y");
+                if (y > 0) {
+                    return activeModel;
+                } else {
+                    return normalModel;
+                }
+            }
+        });
+    }
 }

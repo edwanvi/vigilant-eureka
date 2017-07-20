@@ -47,9 +47,13 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
     @Nullable
     @Override
     public MovingCastleDoorTile createTileEntity(World world, IBlockState state) {
-        MovingCastleDoorTile t = new MovingCastleDoorTile();
-        t.setDestination(BlockPos.ORIGIN, 0);
-        return t;
+        if (state.getValue(IS_TOP)) {
+            MovingCastleDoorTile t = new MovingCastleDoorTile();
+            t.setDestination(BlockPos.ORIGIN, 0);
+            return t;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -75,7 +79,7 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
 
     @Override
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
-        if (!worldIn.isRemote) {
+        if (!worldIn.isRemote && state.getValue(IS_TOP)) {
             MovingCastleDoorTile t;
             if (worldIn.isAreaLoaded(pos, 16)) {
                 t = this.getTileEntity(worldIn, pos);
@@ -104,7 +108,7 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
             return true;
         } else {
             ItemStack stack = playerIn.getHeldItem(hand);
-            if (stack.getItem().equals(ModItems.firstItem)) {
+            if (stack.getItem().equals(ModItems.dimKey)) {
                 MovingCastleDoorTile t = this.getTileEntity(worldIn, pos);
                 NBTTagCompound compound = stack.getTagCompound();
                 if (compound != null) {
