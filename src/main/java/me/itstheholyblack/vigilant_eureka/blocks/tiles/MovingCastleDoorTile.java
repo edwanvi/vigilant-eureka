@@ -1,30 +1,34 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
 import me.itstheholyblack.vigilant_eureka.util.FullPosition;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class MovingCastleDoorTile extends TileEntity {
 
     private FullPosition dest_pos;
 
     public void setDestination(FullPosition position) {
-        new Exception().printStackTrace(System.out);
+        // new Exception().printStackTrace(System.out);
         this.dest_pos = position;
         System.out.println("setting dest to " + position.getX() + " " + position.getY() + " " + position.getZ());
+        TileEntity otherTile;
         try {
-            TileEntity otherTile = this.world.getTileEntity(this.getPos().up());
-            if (otherTile instanceof MovingCastleDoorTile) {
-                ((MovingCastleDoorTile) otherTile).setDestination_NoOther(this.dest_pos);
-            } else if (this.world.getTileEntity(this.getPos().down()) instanceof MovingCastleDoorTile) {
-                otherTile = this.world.getTileEntity(this.getPos().down());
-                ((MovingCastleDoorTile) otherTile).setDestination_NoOther(this.dest_pos);
-            } else {
-            }
+            otherTile = this.world.getTileEntity(this.getPos().up());
         } catch (NullPointerException e) {
-            System.out.println("Other tile was null!");
-            // no-op, already set destination
+            try {
+                otherTile = this.world.getTileEntity(this.getPos().down());
+            } catch (NullPointerException ex) {
+                System.out.println("Other tile most certainly null.");
+                markDirty();
+                return;
+            }
+        }
+        if (otherTile instanceof MovingCastleDoorTile) {
+            ((MovingCastleDoorTile) otherTile).setDestination_NoOther(this.dest_pos);
         }
         System.out.println("Final destination is " + position.getX() + " " + position.getY() + " " + position.getZ());
         markDirty();
@@ -42,6 +46,11 @@ public class MovingCastleDoorTile extends TileEntity {
 
     public FullPosition getDestination() {
         return this.dest_pos;
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
     }
 
     @Override

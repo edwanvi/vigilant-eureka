@@ -4,7 +4,11 @@
     "model": "vigilant_eureka:firstblock"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}]
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ]
   }
 }

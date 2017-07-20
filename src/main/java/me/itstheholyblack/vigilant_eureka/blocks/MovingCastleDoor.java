@@ -6,8 +6,6 @@ import me.itstheholyblack.vigilant_eureka.core.CustomTeleporter;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import me.itstheholyblack.vigilant_eureka.util.FullPosition;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBreakable;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -20,7 +18,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,12 +28,14 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MovingCastleDoor extends BlockBreakable implements ITileEntityProvider {
+import javax.annotation.Nullable;
+
+public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
 
     public static final PropertyBool IS_TOP = PropertyBool.create("is_top");
 
     public MovingCastleDoor() {
-        super(Material.PORTAL, false);
+        super(Material.PORTAL, "movingdoor");
         setUnlocalizedName(Reference.MOD_ID + ".movingdoor");
         setRegistryName("movingdoor");
     }
@@ -45,8 +44,9 @@ public class MovingCastleDoor extends BlockBreakable implements ITileEntityProvi
         return new AxisAlignedBB(0.0D, 0.0D, 0.375D, 1.0D, 1.0D, 0.625D);
     }
 
+    @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public MovingCastleDoorTile createTileEntity(World world, IBlockState state) {
         MovingCastleDoorTile t = new MovingCastleDoorTile();
         t.setDestination(BlockPos.ORIGIN, 0);
         return t;
@@ -80,7 +80,12 @@ public class MovingCastleDoor extends BlockBreakable implements ITileEntityProvi
     @Override
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (!worldIn.isRemote) {
-            MovingCastleDoorTile t = (MovingCastleDoorTile) worldIn.getTileEntity(pos);
+            MovingCastleDoorTile t;
+            if (worldIn.isAreaLoaded(pos, 16)) {
+                t = this.getTileEntity(worldIn, pos);
+            } else {
+                return;
+            }
             if (t.getDestination().getY() > 0 && entityIn instanceof EntityPlayer) {
                 // NBTTagCompound compound = t.getTileData();
                 FullPosition destination = t.getDestination();
@@ -104,7 +109,7 @@ public class MovingCastleDoor extends BlockBreakable implements ITileEntityProvi
         } else {
             ItemStack stack = playerIn.getHeldItem(hand);
             if (stack.getItem().equals(ModItems.firstItem)) {
-                MovingCastleDoorTile t = (MovingCastleDoorTile) worldIn.getTileEntity(pos);
+                MovingCastleDoorTile t = this.getTileEntity(worldIn, pos);
                 NBTTagCompound compound = stack.getTagCompound();
                 if (compound != null) {
                     t.setDestination(
@@ -115,6 +120,16 @@ public class MovingCastleDoor extends BlockBreakable implements ITileEntityProvi
             return true;
         }
 
+    }
+
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess access, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public Class<MovingCastleDoorTile> getTileEntityClass() {
+        return MovingCastleDoorTile.class;
     }
 
     @Override

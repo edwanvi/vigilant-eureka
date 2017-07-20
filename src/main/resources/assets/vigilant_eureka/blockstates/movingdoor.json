@@ -4,17 +4,21 @@
     "model": "vigilant_eureka:movingdoor"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {
         "model": "vigilant_eureka:movingdoor_inv"
-    }],
+      }
+    ],
     "is_top": {
-        "false": {
-            "model": "vigilant_eureka:movingdoor_bottom"
-        },
-        "true": {
-            "model": "vigilant_eureka:movingdoor_top"
-        }
+      "false": {
+        "model": "vigilant_eureka:movingdoor_bottom"
+      },
+      "true": {
+        "model": "vigilant_eureka:movingdoor_top"
+      }
     }
   }
 }
