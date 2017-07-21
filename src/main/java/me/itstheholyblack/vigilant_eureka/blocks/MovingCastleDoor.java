@@ -11,6 +11,8 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
 
@@ -137,6 +140,11 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
         return new BlockStateContainer(this, IS_TOP);
     }
 
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(IS_TOP, meta == 1);
     }
@@ -149,5 +157,12 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0,
                 new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(I18n.format("mouseovertext.dim_door"));
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }
