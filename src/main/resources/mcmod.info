@@ -2,13 +2,13 @@
 {
   "modid": "vigilant_eureka",
   "name": "Vigilant Eureka",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
+  "description": "A mod that does things to the Minecraft.\nSource is available at https://github.com/tkdberger/vigilant-eureka",
+  "version": "0.0.0-beta",
+  "mcversion": "1.12",
+  "url": "https://minecraft.curseforge.com/projects/vigilant-eureka",
   "updateUrl": "",
   "authorList": ["Edwan Vi"],
-  "credits": "",
+  "credits": "Paul Fulham, for help with the moving door.\nSamuel#2783 (sorry) for the key texture.\nPeople smarter than me, for Forge.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
