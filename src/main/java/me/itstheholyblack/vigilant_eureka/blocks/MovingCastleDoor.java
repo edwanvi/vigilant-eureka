@@ -24,6 +24,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -38,9 +40,10 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
     public static final PropertyBool IS_TOP = PropertyBool.create("is_top");
 
     public MovingCastleDoor() {
-        super(Material.PORTAL, "movingdoor");
+        super(Material.WOOD, "movingdoor");
         setUnlocalizedName(Reference.MOD_ID + ".movingdoor");
         setRegistryName("movingdoor");
+        setCreativeTab(ModItems.CREATIVETAB);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -114,10 +117,11 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
             if (stack.getItem().equals(ModItems.dimKey)) {
                 MovingCastleDoorTile t = this.getTileEntity(worldIn, pos);
                 NBTTagCompound compound = stack.getTagCompound();
-                if (compound != null) {
+                if (compound != null && t != null) {
                     t.setDestination(
                             new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z")),
                             stack.getTagCompound().getInteger("dim"));
+                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "Click."), true);
                 }
             }
             return true;
