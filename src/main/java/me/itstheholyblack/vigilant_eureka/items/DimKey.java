@@ -31,6 +31,8 @@ public class DimKey extends Item {
     public DimKey() {
         setRegistryName(Reference.MOD_ID, "dim_key");
         setUnlocalizedName(Reference.MOD_ID + ".dim_key");
+        setMaxStackSize(1); // category of one
+        setCreativeTab(ModItems.CREATIVETAB);
     }
 
     @Override
