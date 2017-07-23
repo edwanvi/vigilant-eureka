@@ -48,8 +48,7 @@ public class DimKey extends Item {
             }
             if (world.getBlockState(look).getBlock().equals(ModBlocks.movingdoor)) {
                 if (tag.getInteger("y") <= 0) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "It won't turn."), true);
-                    return new ActionResult<>(EnumActionResult.FAIL, stack);
+                    return new ActionResult<>(EnumActionResult.PASS, stack);
                 }
             } else {
                 int x = playerIn.getPosition().getX();

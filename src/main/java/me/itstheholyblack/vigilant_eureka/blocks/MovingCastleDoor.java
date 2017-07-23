@@ -116,17 +116,21 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
             ItemStack stack = playerIn.getHeldItem(hand);
             if (stack.getItem().equals(ModItems.dimKey)) {
                 MovingCastleDoorTile t = this.getTileEntity(worldIn, pos);
+                if (t == null) {
+                    t = this.getTileEntity(worldIn, pos.up());
+                }
                 NBTTagCompound compound = stack.getTagCompound();
-                if (compound != null && t != null) {
+                if (compound != null && t != null && compound.getInteger("y") > 0) {
                     t.setDestination(
                             new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z")),
                             stack.getTagCompound().getInteger("dim"));
                     playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "Click."), true);
+                } else if (compound.getInteger("y") <= 0) {
+                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "It won't turn."), true);
                 }
             }
             return true;
         }
-
     }
 
     @Override
