@@ -41,7 +41,7 @@ public class CommonProxy {
         event.getRegistry()
                 .register(new ItemBlock(ModBlocks.firstBlock).setRegistryName(ModBlocks.firstBlock.getRegistryName()));
         event.getRegistry()
-                .register(new ItemBlock(ModBlocks.movingdoor).setRegistryName(ModBlocks.movingdoor.getRegistryName()));
+                .register(new ItemBlock(ModBlocks.movingdoor).setRegistryName(ModBlocks.movingdoor.getRegistryName()).setMaxStackSize(16)); // shoot me
         event.getRegistry().register(new DimKey());
     }
 }
