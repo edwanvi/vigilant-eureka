@@ -29,9 +29,9 @@ public class EventHandler {
                     Vec3d vec3d = e.getLookVec();
                     double d0 = 1.5D;
                     double d1 = 0.1D;
-                    e.motionX += vec3d.x * 0.1D + (vec3d.x * 1.5D - e.motionX) * 0.25D;
-                    e.motionZ += vec3d.z * 0.1D + (vec3d.z * 1.5D - e.motionZ) * 0.25D;
-                     e.addVelocity(0, 0.02, 0); // gravity is ~ 0.08
+                    e.motionX += vec3d.x * d1 + (vec3d.x * d0 - e.motionX) * 0.2D;
+                    e.motionZ += vec3d.z * d1 + (vec3d.z * d0 - e.motionZ) * 0.2D;
+                    e.addVelocity(0, 0.02, 0); // gravity is ~ 0.08
                     break;
                 } else if (!scanned.equals(Blocks.AIR)) {
                     break;
