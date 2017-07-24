@@ -5,11 +5,14 @@ import me.itstheholyblack.vigilant_eureka.blocks.BasicBlock;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.blocks.MovingCastleDoor;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
+import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.items.DimKey;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -21,6 +24,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
+        FMLLog.log.info("Registering Vigilant Eureka event handler.");
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     public void init(FMLInitializationEvent e) {
