@@ -21,7 +21,7 @@ public class EventHandler {
             BlockPos pos = e.getPosition();
             World worldIn = e.getEntityWorld();
             int i = 0;
-            while (i <= 24) {
+            while (i <= 9) {
                 BlockPos scanpos = pos.down(i);
                 Block scanned = worldIn.getBlockState(scanpos).getBlock();
                 if (scanned.equals(Blocks.FIRE) || scanned.equals(Blocks.LAVA) || scanned.equals(Blocks.FLOWING_LAVA)) {
@@ -29,9 +29,17 @@ public class EventHandler {
                     Vec3d vec3d = e.getLookVec();
                     double d0 = 1.5D;
                     double d1 = 0.1D;
-                    // e.motionX += vec3d.x * d1 + (vec3d.x * d0 - e.motionX) * 0.2D;
-                    // e.motionZ += vec3d.z * d1 + (vec3d.z * d0 - e.motionZ) * 0.2D;
-                    e.addVelocity(0, 0.06, 0); // gravity is ~ 0.08
+                    e.motionX += vec3d.x * d1 + (vec3d.x * d0 - e.motionX) * 0.2D;
+                    e.motionZ += vec3d.z * d1 + (vec3d.z * d0 - e.motionZ) * 0.2D;
+                    double up_boost;
+                    if (i > 0) {
+                        up_boost = -0.07 * i + 0.6;
+                    } else {
+                        up_boost = 0.07;
+                    }
+                    if (up_boost > 0) {
+                        e.addVelocity(0, up_boost, 0);
+                    }
                     break;
                 } else if (!scanned.equals(Blocks.AIR)) {
                     break;
