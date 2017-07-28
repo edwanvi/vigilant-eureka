@@ -27,6 +27,7 @@ Thumbs.db
 
 ## Private Stuffs
 /private.properties
+gradle.properties
 
 ## Jars
 *.jar
@@ -60,3 +61,4 @@ Temporary Items
 
 # ARL Symlinks
 api/
+/forgestore.jks
