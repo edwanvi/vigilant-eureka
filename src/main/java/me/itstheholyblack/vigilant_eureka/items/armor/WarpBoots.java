@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WarpBoots extends ItemArmor {
     public WarpBoots() {
-        super(ArmorMaterial.CHAIN, 0, EntityEquipmentSlot.FEET);
+        super(ArmorTypes.BUGGER_ME_MAT, 0, EntityEquipmentSlot.FEET);
         setUnlocalizedName(Reference.MOD_ID + "." + "warp_boots");
         setRegistryName("warp_boots");
         setCreativeTab(ModItems.CREATIVETAB);
