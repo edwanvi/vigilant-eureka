@@ -7,6 +7,7 @@ import me.itstheholyblack.vigilant_eureka.blocks.MovingCastleDoor;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
 import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.items.DimKey;
+import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -50,6 +51,7 @@ public class CommonProxy {
         event.getRegistry()
                 .register(new ItemBlock(ModBlocks.movingdoor).setRegistryName(ModBlocks.movingdoor.getRegistryName()).setMaxStackSize(16)); // shoot me
         event.getRegistry().register(new DimKey());
+        event.getRegistry().register(new WarpBoots());
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 }
