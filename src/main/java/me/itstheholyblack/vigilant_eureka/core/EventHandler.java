@@ -1,12 +1,16 @@
 package me.itstheholyblack.vigilant_eureka.core;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
@@ -45,6 +49,22 @@ public class EventHandler {
                     break;
                 }
                 i++;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void armorChanged(LivingEquipmentChangeEvent event) {
+        ItemStack oldStack = event.getFrom();
+        ItemStack newStack = event.getTo();
+        EntityEquipmentSlot slot = event.getSlot();
+        if (slot.equals(EntityEquipmentSlot.HEAD)) {
+            if (newStack.getItem().equals(ModItems.invisCap)) {
+                // switch to the invis cap
+                event.getEntityLiving().setInvisible(true);
+            } else if (oldStack.getItem().equals(ModItems.invisCap)) {
+                // switch off cap
+                event.getEntityLiving().setInvisible(false);
             }
         }
     }
