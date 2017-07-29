@@ -16,8 +16,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -48,8 +46,7 @@ public class DimKey extends Item {
             }
             if (world.getBlockState(look).getBlock().equals(ModBlocks.movingdoor)) {
                 if (tag.getInteger("y") <= 0) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "It won't turn."), true);
-                    return new ActionResult<>(EnumActionResult.FAIL, stack);
+                    return new ActionResult<>(EnumActionResult.PASS, stack);
                 }
             } else {
                 int x = playerIn.getPosition().getX();

@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, certificateFingerprint = Reference.MOD_KEY)
 public class Eureka {
 
     @SidedProxy(clientSide = "me.itstheholyblack.vigilant_eureka.proxy.ClientProxy", serverSide = "me.itstheholyblack.vigilant_eureka.proxy.ServerProxy")

@@ -14,7 +14,6 @@ public class MovingCastleDoorTile extends TileEntity {
     public void setDestination(FullPosition position) {
         // new Exception().printStackTrace(System.out);
         this.dest_pos = position;
-        System.out.println("setting dest to " + position.getX() + " " + position.getY() + " " + position.getZ());
         markDirty();
     }
 
@@ -46,13 +45,11 @@ public class MovingCastleDoorTile extends TileEntity {
         int dim = compound.getInteger("destination_dim");
         FullPosition destination = new FullPosition(pos_x, pos_y, pos_z, dim);
         this.setDestination(destination);
-        System.out.println("read " + dest_pos.getX() + " " + dest_pos.getY() + " " + dest_pos.getZ() + " from NBT");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        System.out.println("writing " + dest_pos.getX() + " " + dest_pos.getY() + " " + dest_pos.getZ() + " to NBT");
         compound.setInteger("destination_x", this.dest_pos.getX());
         compound.setInteger("destination_y", this.dest_pos.getY());
         compound.setInteger("destination_z", this.dest_pos.getZ());
