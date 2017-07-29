@@ -83,9 +83,9 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 
 Properties props = new Properties()
 props.load(new FileInputStream("gradle.properties"))
-signJar.keyStore=props.jarsign_keystore
-signJar.alias=props.alias
-signJar.storePass=props.storePass
-signJar.keyPass=props.keyPass
+signJar.keyStore = props.jarsign_keystore
+signJar.alias = props.alias
+signJar.storePass = props.storePass
+signJar.keyPass = props.keyPass
 
 build.dependsOn signJar
