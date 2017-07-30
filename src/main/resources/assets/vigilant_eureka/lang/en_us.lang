@@ -11,3 +11,6 @@ mouseovertext.invis_cap=It's a cap that makes you invisible. Hey, that'd be cool
 mouseovertext.warp_boots=Boots that can outrun space and time, because that's definitely something your mortal feet can handle.
 
 itemGroup.vigilantEureka=Vigilant Eureka
+
+vigilant_eureka.keybind.warp_key=Warp with Warp Boots
+vigilant_eureka.gui.keybinds=Vigilant Eureka
