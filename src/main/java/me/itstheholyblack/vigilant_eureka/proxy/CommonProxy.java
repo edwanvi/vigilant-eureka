@@ -10,6 +10,7 @@ import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.items.DimKey;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
+import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -40,6 +41,8 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         FMLLog.log.info("Registering Vigilant Eureka event handler.");
         MinecraftForge.EVENT_BUS.register(new EventHandler());
+        FMLLog.log.info("Registering Vigilant Eureka networking.");
+        PacketHandler.registerMessages(Reference.MOD_ID);
     }
 
     /**
