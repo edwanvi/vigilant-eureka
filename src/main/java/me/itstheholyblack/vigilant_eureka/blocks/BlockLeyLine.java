@@ -35,26 +35,29 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            ItemStack stack = playerIn.getHeldItem(hand);
-            if (stack.getItem().equals(ModItems.leyKey)) {
-                NBTTagCompound comp = NBTUtil.getTagCompoundSafe(stack);
-                if (comp.hasKey("tolink")) {
-                    LeyLineTile tile = this.getTileEntity(worldIn, pos);
-                    BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(comp.getCompoundTag("tolink"));
-                    if (!p.equals(pos)) {
-                        tile.addLink(p);
+        ItemStack stack = playerIn.getHeldItem(hand);
+        if (stack.getItem().equals(ModItems.leyKey)) {
+            NBTTagCompound comp = NBTUtil.getTagCompoundSafe(stack);
+            if (comp.hasKey("tolink")) {
+                LeyLineTile tile = this.getTileEntity(worldIn, pos);
+                BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(comp.getCompoundTag("tolink"));
+                if (!p.equals(pos)) {
+                    LeyLineTile.EnumLinkResults results = tile.addLinkOut(p);
+                    if (results.equals(LeyLineTile.EnumLinkResults.SUCCEED)) {
                         comp.removeTag("tolink");
                         playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_link_good")), true);
-                    } else {
-                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_selflink")), true);
+                    } else if (results.equals(LeyLineTile.EnumLinkResults.DOUBLELINK)) {
+                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_doublelink")), true);
+                    } else if (results.equals(LeyLineTile.EnumLinkResults.TWOWAY)) {
+                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_twoway")), true);
                     }
                 } else {
-                    comp.setTag("tolink", net.minecraft.nbt.NBTUtil.createPosTag(pos));
+                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_selflink")), true);
                 }
-                return true;
+            } else {
+                comp.setTag("tolink", net.minecraft.nbt.NBTUtil.createPosTag(pos));
             }
-            return false;
+            return true;
         }
         return false;
     }
