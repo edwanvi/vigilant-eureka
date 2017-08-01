@@ -21,3 +21,5 @@ vigilant_eureka.gui.keybinds=Vigilant Eureka
 
 message.ley_link_good=It worked!
 message.ley_link_selflink=The feedback loop quickly decays to nothing...
+message.ley_link_doublelink=This link already exists!
+message.ley_link_twoway=Two way links aren't acceptable.
