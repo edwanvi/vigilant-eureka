@@ -21,7 +21,7 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         RenderHelper.disableStandardItemLighting();
-        float the_ticker = (float) ((100) * Math.sin(te.ticks + partialTicks / 10) + 100);
+        float the_ticker = (float) ((100) * Math.cos(te.ticks + partialTicks / 10) + 100);
         float f = (the_ticker) / 200.0F;
         float f1 = 0.0F;
 

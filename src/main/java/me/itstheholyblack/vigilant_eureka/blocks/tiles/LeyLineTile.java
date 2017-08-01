@@ -11,18 +11,26 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class LeyLineTile extends TileEntity implements ITickable {
 
-    private UUID name;
     public float ticks = 0;
 
     private ArrayList<BlockPos> links;
 
     public LeyLineTile() {
         super();
-        this.name = UUID.randomUUID();
+        this.links = new ArrayList<>();
+    }
+
+    public void addLink(BlockPos bp) {
+        if (!this.links.contains(bp)) {
+            this.links.add(bp);
+        }
+    }
+
+    public BlockPos getLinkAtIndex(int i) {
+        return this.links.get(i);
     }
 
     @Override
@@ -33,22 +41,27 @@ public class LeyLineTile extends TileEntity implements ITickable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        this.name = compound.getUniqueId("name");
-        NBTTagList n = (NBTTagList) compound.getTag("links");
-        for (NBTBase tag : n) {
-            this.links.add(NBTUtil.getPosFromTag((NBTTagCompound) tag));
+        if (compound.getBoolean("isLinked")) {
+            NBTTagList n = (NBTTagList) compound.getTag("links");
+            for (NBTBase tag : n) {
+                this.links.add(NBTUtil.getPosFromTag((NBTTagCompound) tag));
+            }
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setUniqueId("name", this.name);
-        NBTTagList n = new NBTTagList();
-        for (BlockPos p : links) {
-            n.appendTag(NBTUtil.createPosTag(p));
+        if (links != null && links.size() > 0) {
+            compound.setBoolean("isLinked", true);
+            NBTTagList n = new NBTTagList();
+            for (BlockPos p : links) {
+                n.appendTag(NBTUtil.createPosTag(p));
+            }
+            compound.setTag("links", n);
+        } else {
+            compound.setBoolean("isLinked", false);
         }
-        compound.setTag("links", n);
         return compound;
     }
 

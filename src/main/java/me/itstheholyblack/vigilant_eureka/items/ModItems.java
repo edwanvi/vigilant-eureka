@@ -18,6 +18,8 @@ public class ModItems {
     public static InvisCap invisCap;
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":bismite")
     public static ItemBismite bismite;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":ley_key")
+    public static ItemLeyKey leyKey;
 
     public static final CreativeTabs CREATIVETAB = new CreativeTabs("vigilantEureka") {
         @Override
@@ -32,5 +34,6 @@ public class ModItems {
         warpBoots.initModel();
         invisCap.initModel();
         bismite.initModel();
+        leyKey.initModel();
     }
 }

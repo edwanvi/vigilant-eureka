@@ -8,6 +8,7 @@ import me.itstheholyblack.vigilant_eureka.client.renderer.CustomBipedArmor;
 import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.items.DimKey;
 import me.itstheholyblack.vigilant_eureka.items.ItemBismite;
+import me.itstheholyblack.vigilant_eureka.items.ItemLeyKey;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
 import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
@@ -95,6 +96,7 @@ public class CommonProxy {
         event.getRegistry().register(new WarpBoots());
         event.getRegistry().register(new InvisCap());
         event.getRegistry().register(new ItemBismite());
+        event.getRegistry().register(new ItemLeyKey());
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 }

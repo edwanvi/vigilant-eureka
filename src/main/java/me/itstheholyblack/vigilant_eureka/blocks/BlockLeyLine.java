@@ -2,10 +2,12 @@ package me.itstheholyblack.vigilant_eureka.blocks;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
+import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,20 +37,26 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             ItemStack stack = playerIn.getHeldItem(hand);
-            if (stack.getItem().equals(ModItems.dimKey)) {
-                LeyLineTile t = this.getTileEntity(worldIn, pos);
-                if (t == null) {
-                    t = this.getTileEntity(worldIn, pos.up());
+            if (stack.getItem().equals(ModItems.leyKey)) {
+                NBTTagCompound comp = NBTUtil.getTagCompoundSafe(stack);
+                if (comp.hasKey("tolink")) {
+                    LeyLineTile tile = this.getTileEntity(worldIn, pos);
+                    BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(comp.getCompoundTag("tolink"));
+                    if (!p.equals(pos)) {
+                        tile.addLink(p);
+                        comp.removeTag("tolink");
+                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_link_good")), true);
+                    } else {
+                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_selflink")), true);
+                    }
+                } else {
+                    comp.setTag("tolink", net.minecraft.nbt.NBTUtil.createPosTag(pos));
                 }
-                NBTTagCompound compound = stack.getTagCompound();
-                if (compound != null && t != null && compound.getInteger("y") > 0) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "The key and the intersection arc together."), true);
-                } else if (compound.getInteger("y") <= 0) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "There's no interaction."), true);
-                }
+                return true;
             }
+            return false;
         }
-        return true;
+        return false;
     }
 
     @Override

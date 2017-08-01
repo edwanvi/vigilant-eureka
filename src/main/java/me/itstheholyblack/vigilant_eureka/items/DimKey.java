@@ -2,6 +2,7 @@ package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
+import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.util.RayTraceHelper;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -37,7 +38,7 @@ public class DimKey extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer playerIn, EnumHand hand) {
         ItemStack stack = playerIn.getHeldItem(hand);
         if (!world.isRemote) {
-            NBTTagCompound tag = getTagCompoundSafe(stack);
+            NBTTagCompound tag = NBTUtil.getTagCompoundSafe(stack);
             BlockPos look;
             try {
                 look = RayTraceHelper.tracePath(world, playerIn, 3, 1, null).getBlockPos();
@@ -60,15 +61,6 @@ public class DimKey extends Item {
             }
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }
-
-    private NBTTagCompound getTagCompoundSafe(ItemStack stack) {
-        NBTTagCompound tagCompound = stack.getTagCompound();
-        if (tagCompound == null) {
-            tagCompound = new NBTTagCompound();
-            stack.setTagCompound(tagCompound);
-        }
-        return tagCompound;
     }
 
     @SideOnly(Side.CLIENT)
@@ -105,7 +97,7 @@ public class DimKey extends Item {
         ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
-                int y = getTagCompoundSafe(stack).getInteger("y");
+                int y = NBTUtil.getTagCompoundSafe(stack).getInteger("y");
                 if (y > 0) {
                     return activeModel;
                 } else {
