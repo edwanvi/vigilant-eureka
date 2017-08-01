@@ -5,10 +5,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
@@ -18,6 +21,7 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
 
     @Override
     public void render(LeyLineTile te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        // BEGIN ENDERDRAGON CODE
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         RenderHelper.disableStandardItemLighting();
@@ -68,5 +72,22 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         GlStateManager.enableTexture2D();
         GlStateManager.enableAlpha();
         RenderHelper.enableStandardItemLighting();
+        // END ENDERDRAGON CODE
+
+        GlStateManager.pushMatrix();
+        for (int i = 0; i < te.numberOut(); i++) {
+            BlockPos pos = te.getLinkOutAtIndex(i);
+            bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+            bufferbuilder.setTranslation(
+                    -TileEntityRendererDispatcher.staticPlayerX,
+                    -TileEntityRendererDispatcher.staticPlayerY,
+                    -TileEntityRendererDispatcher.staticPlayerZ
+            );
+            bufferbuilder.pos(te.getPos().getX() + 0.5, te.getPos().getY() + 0.5, te.getPos().getZ() + 0.5).endVertex();
+            bufferbuilder.pos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).endVertex();
+            tessellator.draw();
+            bufferbuilder.setTranslation(0, 0, 0);
+        }
+        GlStateManager.popMatrix();
     }
 }
