@@ -13,6 +13,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
@@ -20,21 +21,21 @@ public class LeyLineTile extends TileEntity implements ITickable {
 
     public float ticks = 0;
 
-    private ArrayList<BlockPos> links_out;
-    private ArrayList<BlockPos> links_in;
+    private BlockPos link_out;
+    private ArrayList<BlockPos> polygon;
 
     public LeyLineTile() {
         super();
-        this.links_out = new ArrayList<>();
-        this.links_in = new ArrayList<>();
+        this.link_out = new BlockPos(BlockPos.ORIGIN); // this will be very quickly changed
+        this.polygon = new ArrayList<>();
     }
 
     public EnumLinkResults addLinkOut(BlockPos bp) {
-        if (!this.links_out.contains(bp)) {
+        if (!this.link_out.equals(bp)) {
             LeyLineTile otherLine = (LeyLineTile) this.world.getTileEntity(bp);
-            if (!otherLine.links_out.contains(this.getPos())) {
+            if (!otherLine.link_out.equals(this.getPos())) {
                 System.out.println("Link succeeded!");
-                this.links_out.add(bp);
+                this.link_out = bp;
                 markDirty();
                 return EnumLinkResults.SUCCEED;
             } else {
@@ -47,22 +48,18 @@ public class LeyLineTile extends TileEntity implements ITickable {
         }
     }
 
-    public BlockPos getLinkOutAtIndex(int i) {
-        return this.links_out.get(i);
+    public BlockPos getLinkOut() {
+        return this.link_out;
     }
 
-    public boolean addLinkIn(BlockPos bp) {
-        if (!this.links_in.contains(bp)) {
-            this.links_in.add(bp);
-            markDirty();
-            return true;
-        } else {
-            return false;
-        }
+    public void setPolygon(ArrayList<BlockPos> p) {
+        this.polygon = p;
+        markDirty();
     }
 
+    @Deprecated
     public int numberOut() {
-        return this.links_out.size();
+        return 1;
     }
 
     @Override
@@ -74,38 +71,33 @@ public class LeyLineTile extends TileEntity implements ITickable {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         if (compound.getBoolean("isLinkedOut")) {
-            System.out.println("Loading oubound links.");
-            NBTTagList n = (NBTTagList) compound.getTag("links_out");
-            int i = 0;
+            this.link_out = NBTUtil.getPosFromTag(compound.getCompoundTag("link_out"));
+        }
+        if (compound.hasKey("poly")) {
+            NBTTagList n = (NBTTagList) compound.getTag("poly");
             for (NBTBase tag : n) {
-                this.links_out.add(NBTUtil.getPosFromTag((NBTTagCompound) tag));
-                i++;
+                polygon.add(NBTUtil.getPosFromTag((NBTTagCompound) tag));
             }
-            System.out.println("Loaded " + Integer.toString(i) + " links.");
         }
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        if (links_out != null && links_out.size() > 0) {
+        if (!link_out.equals(BlockPos.ORIGIN)) {
             compound.setBoolean("isLinkedOut", true);
+            NBTTagCompound n = NBTUtil.createPosTag(link_out);
+            compound.setTag("link_out", n);
+        } else {
+            compound.setBoolean("isLinkedOut", false);
+        }
+        if (polygon.size() > 0) {
             NBTTagList n = new NBTTagList();
-            for (BlockPos p : links_out) {
+            for (BlockPos p : polygon) {
                 n.appendTag(NBTUtil.createPosTag(p));
             }
-            compound.setTag("links_out", n);
-        }
-        if (links_in != null && links_in.size() > 0) {
-            compound.setBoolean("isLinkedIn", true);
-            NBTTagList n = new NBTTagList();
-            for (BlockPos p : links_in) {
-                n.appendTag(NBTUtil.createPosTag(p));
-            }
-            compound.setTag("links_in", n);
-        }
-        if (links_out == null && links_in == null) {
-            compound.setBoolean("isLinked", false);
+            compound.setTag("poly", n);
         }
         return compound;
     }
@@ -113,13 +105,11 @@ public class LeyLineTile extends TileEntity implements ITickable {
     @Override
     public void update() {
         ticks = ticks + 0.1F;
-        if (!this.world.isRemote && this.links_out.size() > 0 && this.world.isAreaLoaded(this.getPos(), 16)) {
+        if (!this.world.isRemote && !this.link_out.equals(BlockPos.ORIGIN) && this.world.isAreaLoaded(this.getPos(), 16)) {
             try {
-                for (BlockPos p : links_out) {
-                    if (!this.getWorld().getBlockState(p).getBlock().equals(ModBlocks.leyLine)) {
-                        links_out.remove(p);
-                        markDirty();
-                    }
+                if (!this.getWorld().getBlockState(link_out).getBlock().equals(ModBlocks.leyLine)) {
+                    link_out = BlockPos.ORIGIN;
+                    markDirty();
                 }
             } catch (ConcurrentModificationException e) {
                 System.out.println("oh bother");
@@ -128,6 +118,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound getUpdateTag() {
         // getUpdateTag() is called whenever the chunkdata is sent to the
         // client. In contrast getUpdatePacket() is called when the tile entity
