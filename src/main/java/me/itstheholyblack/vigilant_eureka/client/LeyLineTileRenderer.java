@@ -75,8 +75,8 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         // END ENDERDRAGON CODE
 
         GlStateManager.pushMatrix();
-        for (int i = 0; i < te.numberOut(); i++) {
-            BlockPos pos = te.getLinkOutAtIndex(i);
+        BlockPos pos = te.getLinkOut();
+        if (!pos.equals(BlockPos.ORIGIN)) {
             bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
             bufferbuilder.setTranslation(
                     -TileEntityRendererDispatcher.staticPlayerX,
