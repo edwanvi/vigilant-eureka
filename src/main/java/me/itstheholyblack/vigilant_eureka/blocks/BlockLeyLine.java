@@ -3,6 +3,7 @@ package me.itstheholyblack.vigilant_eureka.blocks;
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
+import me.itstheholyblack.vigilant_eureka.core.PolyHelper;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -22,8 +23,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.Sys;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
     public BlockLeyLine() {
@@ -58,6 +61,16 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
                 comp.setTag("tolink", net.minecraft.nbt.NBTUtil.createPosTag(pos));
             }
             return true;
+        } else if (stack.getItem().equals(ModItems.dimKey)) {
+            ArrayList<BlockPos> poly = PolyHelper.stackSolve((LeyLineTile) worldIn.getTileEntity(pos));
+            for (BlockPos p : poly) {
+                LeyLineTile te = (LeyLineTile) worldIn.getTileEntity(p);
+                te.setPolygon(poly);
+            }
+            System.out.println(poly);
+            if (PolyHelper.contains(playerIn.getPosition(), poly)) {
+                System.out.println("pure imagination");
+            }
         }
         return false;
     }
