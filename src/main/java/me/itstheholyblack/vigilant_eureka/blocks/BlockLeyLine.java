@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.Sys;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -63,13 +62,15 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
             return true;
         } else if (stack.getItem().equals(ModItems.dimKey)) {
             ArrayList<BlockPos> poly = PolyHelper.stackSolve((LeyLineTile) worldIn.getTileEntity(pos));
-            for (BlockPos p : poly) {
-                LeyLineTile te = (LeyLineTile) worldIn.getTileEntity(p);
-                te.setPolygon(poly);
-            }
-            System.out.println(poly);
-            if (PolyHelper.contains(playerIn.getPosition(), poly)) {
-                System.out.println("pure imagination");
+            if (poly != null) {
+                for (BlockPos p : poly) {
+                    LeyLineTile te = (LeyLineTile) worldIn.getTileEntity(p);
+                    te.setPolygon(poly);
+                }
+                System.out.println(poly);
+                if (PolyHelper.contains(playerIn.getPosition(), poly)) {
+                    System.out.println("pure imagination");
+                }
             }
         }
         return false;
