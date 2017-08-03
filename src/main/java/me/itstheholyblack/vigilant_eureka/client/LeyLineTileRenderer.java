@@ -18,7 +18,6 @@ import java.util.Random;
 @SideOnly(Side.CLIENT)
 public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> {
 
-
     @Override
     public void render(LeyLineTile te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         // BEGIN ENDERDRAGON CODE
@@ -89,5 +88,10 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
             bufferbuilder.setTranslation(0, 0, 0);
         }
         GlStateManager.popMatrix();
+    }
+
+    @Override
+    public boolean isGlobalRenderer(LeyLineTile te) {
+        return true;
     }
 }

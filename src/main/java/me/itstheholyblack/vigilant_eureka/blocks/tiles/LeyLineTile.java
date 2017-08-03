@@ -1,7 +1,10 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
+import me.itstheholyblack.vigilant_eureka.core.PolyHelper;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -10,12 +13,16 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 public class LeyLineTile extends TileEntity implements ITickable {
 
@@ -23,6 +30,8 @@ public class LeyLineTile extends TileEntity implements ITickable {
 
     private BlockPos link_out;
     private ArrayList<BlockPos> polygon;
+    private int delayCounter = 10;
+    private List<EntityLivingBase> lastList;
 
     public LeyLineTile() {
         super();
@@ -115,6 +124,16 @@ public class LeyLineTile extends TileEntity implements ITickable {
                 System.out.println("oh bother");
             }
         }
+        delayCounter--;
+        if (delayCounter <= 0 || lastList == null) {
+            delayCounter = 10;
+            lastList = this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(getPos().add(-5, -5, -5), getPos().add(5, 5, 5)));
+            for (EntityLivingBase e : lastList) {
+                NBTTagCompound compound = e.getEntityData();
+                compound.setBoolean("inPoly", PolyHelper.contains(e.getPosition(), this.polygon));
+                compound.setInteger("timeSince", 0);
+            }
+        }
     }
 
     @Override
@@ -142,6 +161,12 @@ public class LeyLineTile extends TileEntity implements ITickable {
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         // Here we get the packet from the server and read it into our client side tile entity
         this.readFromNBT(packet.getNbtCompound());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+        return new AxisAlignedBB(getPos().add(-5, -5, -5), getPos().add(5, 5, 5));
     }
 
     public enum EnumLinkResults {
