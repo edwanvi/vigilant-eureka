@@ -2,7 +2,6 @@ package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.core.PolyHelper;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTBase;
@@ -21,7 +20,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class LeyLineTile extends TileEntity implements ITickable {
@@ -40,6 +38,9 @@ public class LeyLineTile extends TileEntity implements ITickable {
     }
 
     public EnumLinkResults addLinkOut(BlockPos bp) {
+        if (bp.equals(this.getPos())) {
+            return EnumLinkResults.SELFLINK;
+        }
         if (!this.link_out.equals(bp)) {
             LeyLineTile otherLine = (LeyLineTile) this.world.getTileEntity(bp);
             if (!otherLine.link_out.equals(this.getPos())) {
@@ -115,23 +116,21 @@ public class LeyLineTile extends TileEntity implements ITickable {
     public void update() {
         ticks = ticks + 0.1F;
         if (!this.world.isRemote && !this.link_out.equals(BlockPos.ORIGIN) && this.world.isAreaLoaded(this.getPos(), 16)) {
-            try {
-                if (!this.getWorld().getBlockState(link_out).getBlock().equals(ModBlocks.leyLine)) {
-                    link_out = BlockPos.ORIGIN;
-                    markDirty();
-                }
-            } catch (ConcurrentModificationException e) {
-                System.out.println("oh bother");
+            if (!this.getWorld().getBlockState(link_out).getBlock().equals(ModBlocks.leyLine)) {
+                link_out = BlockPos.ORIGIN;
+                markDirty();
             }
         }
         delayCounter--;
         if (delayCounter <= 0 || lastList == null) {
             delayCounter = 10;
             lastList = this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(getPos().add(-5, -5, -5), getPos().add(5, 5, 5)));
-            for (EntityLivingBase e : lastList) {
-                NBTTagCompound compound = e.getEntityData();
-                compound.setBoolean("inPoly", PolyHelper.contains(e.getPosition(), this.polygon));
-                compound.setInteger("timeSince", 0);
+            if (lastList.size() > 0) {
+                for (EntityLivingBase e : lastList) {
+                    NBTTagCompound compound = e.getEntityData();
+                    compound.setBoolean("inPoly", PolyHelper.contains(e.getPosition(), this.polygon));
+                    compound.setInteger("timeSince", 0);
+                }
             }
         }
     }
