@@ -51,7 +51,7 @@ public class EventHandler {
                 i++;
             }
         }
-        if (e.getEntityData().getBoolean("inPoly") &&  e.getEntityData().getInteger("timeSince") < 10) {
+        if (e.getEntityData().getBoolean("inPoly") && e.getEntityData().getInteger("timeSince") < 10) {
             e.getEntityData().setInteger("timeSince", e.getEntityData().getInteger("timeSince") + 1);
             if (e.motionY < 0) {
                 e.addVelocity(0, e.motionY * -0.9, 0);
