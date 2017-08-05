@@ -23,6 +23,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class DimKey extends Item {
@@ -35,6 +36,7 @@ public class DimKey extends Item {
     }
 
     @Override
+    @Nonnull
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer playerIn, EnumHand hand) {
         ItemStack stack = playerIn.getHeldItem(hand);
         if (!world.isRemote) {
