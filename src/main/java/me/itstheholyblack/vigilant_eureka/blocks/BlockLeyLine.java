@@ -17,7 +17,9 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -46,18 +48,26 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
                 LeyLineTile.EnumLinkResults results = tile.addLinkOut(p);
                 if (results.equals(LeyLineTile.EnumLinkResults.SUCCEED)) {
                     comp.removeTag("tolink");
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_link_good")), true);
+                    // playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_link_good")), true);
+                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_good").setStyle(new Style().setColor(TextFormatting.GREEN)), true);
+                    return true;
                 } else if (results.equals(LeyLineTile.EnumLinkResults.DOUBLELINK)) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_doublelink")), true);
+                    // playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_doublelink")), true);
+                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_doublelink").setStyle(new Style().setColor(TextFormatting.RED)), true);
+                    return false;
                 } else if (results.equals(LeyLineTile.EnumLinkResults.TWOWAY)) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_twoway")), true);
+                    // playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_twoway")), true);
+                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_twoway").setStyle(new Style().setColor(TextFormatting.RED)), true);
+                    return false;
                 } else {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_selflink")), true);
+                    // playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_selflink")), true);
+                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_selflink").setStyle(new Style().setColor(TextFormatting.RED)), true);
+                    return false;
                 }
             } else {
                 comp.setTag("tolink", net.minecraft.nbt.NBTUtil.createPosTag(pos));
+                return true;
             }
-            return true;
         } else if (stack.getItem().equals(ModItems.dimKey)) {
             ArrayList<BlockPos> poly = PolyHelper.stackSolve((LeyLineTile) worldIn.getTileEntity(pos));
             if (poly != null) {
@@ -74,8 +84,10 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
                 }
                 thisTile.setLead(!hasLeader);
                 playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_solve_good")), true);
+                return true;
             } else {
                 playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_solve_incomplete")), true);
+                return false;
             }
         }
         return false;
