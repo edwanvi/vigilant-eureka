@@ -53,21 +53,15 @@ public class EventHandler {
         }
         if (e.getEntityData().getBoolean("inPoly") && e.getEntityData().getInteger("timeSince") < 10) {
             e.getEntityData().setInteger("timeSince", e.getEntityData().getInteger("timeSince") + 1);
-            if (e.motionY < 0) {
-                e.addVelocity(0, e.motionY * -0.9, 0);
+            if (e.motionY <= 0) {
+                e.addVelocity(0, e.motionY * -1, 0);
+                e.fallDistance = 0;
+            } else {
+                e.addVelocity(0, e.motionY * 0.2, 0);
             }
         } else if (e.getEntityData().getInteger("timeSince") > 10) {
             e.getEntityData().removeTag("timeSince");
             e.getEntityData().removeTag("inPoly");
-        }
-    }
-
-    @SubscribeEvent
-    public void livingJump(LivingEvent.LivingJumpEvent event) {
-        EntityLivingBase e = event.getEntityLiving();
-        if (e.getEntityData().getBoolean("inPoly") && e.getEntityData().getInteger("timeSince") < 10) {
-            e.getEntityData().setInteger("timeSince", e.getEntityData().getInteger("timeSince") + 1);
-            e.addVelocity(0, e.motionY * 0.25, 0);
         }
     }
 

@@ -43,16 +43,14 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
             if (comp.hasKey("tolink")) {
                 LeyLineTile tile = this.getTileEntity(worldIn, pos);
                 BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(comp.getCompoundTag("tolink"));
-                if (!p.equals(pos)) {
-                    LeyLineTile.EnumLinkResults results = tile.addLinkOut(p);
-                    if (results.equals(LeyLineTile.EnumLinkResults.SUCCEED)) {
-                        comp.removeTag("tolink");
-                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_link_good")), true);
-                    } else if (results.equals(LeyLineTile.EnumLinkResults.DOUBLELINK)) {
-                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_doublelink")), true);
-                    } else if (results.equals(LeyLineTile.EnumLinkResults.TWOWAY)) {
-                        playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_twoway")), true);
-                    }
+                LeyLineTile.EnumLinkResults results = tile.addLinkOut(p);
+                if (results.equals(LeyLineTile.EnumLinkResults.SUCCEED)) {
+                    comp.removeTag("tolink");
+                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_link_good")), true);
+                } else if (results.equals(LeyLineTile.EnumLinkResults.DOUBLELINK)) {
+                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_doublelink")), true);
+                } else if (results.equals(LeyLineTile.EnumLinkResults.TWOWAY)) {
+                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_twoway")), true);
                 } else {
                     playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_link_selflink")), true);
                 }
@@ -63,14 +61,21 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
         } else if (stack.getItem().equals(ModItems.dimKey)) {
             ArrayList<BlockPos> poly = PolyHelper.stackSolve((LeyLineTile) worldIn.getTileEntity(pos));
             if (poly != null) {
+                LeyLineTile thisTile = (LeyLineTile) worldIn.getTileEntity(pos);
+                boolean hasLeader = false;
                 for (BlockPos p : poly) {
                     LeyLineTile te = (LeyLineTile) worldIn.getTileEntity(p);
                     te.setPolygon(poly);
+                    if (!te.isLead()) {
+                        continue;
+                    } else {
+                        hasLeader = true;
+                    }
                 }
-                System.out.println(poly);
-                if (PolyHelper.contains(playerIn.getPosition(), poly)) {
-                    System.out.println("pure imagination");
-                }
+                thisTile.setLead(!hasLeader);
+                playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + I18n.format("message.ley_solve_good")), true);
+            } else {
+                playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + I18n.format("message.ley_solve_incomplete")), true);
             }
         }
         return false;

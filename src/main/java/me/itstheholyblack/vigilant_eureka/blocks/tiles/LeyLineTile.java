@@ -1,9 +1,9 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
-import me.itstheholyblack.vigilant_eureka.core.PolyHelper;
+import me.itstheholyblack.vigilant_eureka.core.Polygon;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -28,8 +28,10 @@ public class LeyLineTile extends TileEntity implements ITickable {
 
     private BlockPos link_out;
     private ArrayList<BlockPos> polygon;
+    private Polygon specialPoly;
     private int delayCounter = 10;
-    private List<EntityLivingBase> lastList;
+    private List<Entity> lastList;
+    private boolean isLead;
 
     public LeyLineTile() {
         super();
@@ -64,7 +66,20 @@ public class LeyLineTile extends TileEntity implements ITickable {
 
     public void setPolygon(ArrayList<BlockPos> p) {
         this.polygon = p;
+        Polygon.Builder fancyPolyBuilder = Polygon.builder();
+        for (BlockPos pos : p) {
+            fancyPolyBuilder.add(pos.getX(), pos.getZ());
+        }
+        specialPoly = fancyPolyBuilder.build();
         markDirty();
+    }
+
+    public boolean isLead() {
+        return isLead;
+    }
+
+    public void setLead(boolean lead) {
+        this.isLead = lead;
     }
 
     @Deprecated
@@ -85,10 +100,13 @@ public class LeyLineTile extends TileEntity implements ITickable {
         }
         if (compound.hasKey("poly")) {
             NBTTagList n = (NBTTagList) compound.getTag("poly");
+            ArrayList<BlockPos> newPoly = new ArrayList<>();
             for (NBTBase tag : n) {
-                polygon.add(NBTUtil.getPosFromTag((NBTTagCompound) tag));
+                newPoly.add(NBTUtil.getPosFromTag((NBTTagCompound) tag));
             }
+            setPolygon(newPoly);
         }
+        isLead = compound.getBoolean("lead");
     }
 
     @Override
@@ -109,6 +127,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
             }
             compound.setTag("poly", n);
         }
+        compound.setBoolean("lead", isLead);
         return compound;
     }
 
@@ -121,15 +140,17 @@ public class LeyLineTile extends TileEntity implements ITickable {
                 markDirty();
             }
         }
-        delayCounter--;
-        if (delayCounter <= 0 || lastList == null) {
-            delayCounter = 10;
-            lastList = this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(getPos().add(-5, -5, -5), getPos().add(5, 5, 5)));
-            if (lastList.size() > 0) {
-                for (EntityLivingBase e : lastList) {
-                    NBTTagCompound compound = e.getEntityData();
-                    compound.setBoolean("inPoly", PolyHelper.contains(e.getPosition(), this.polygon));
-                    compound.setInteger("timeSince", 0);
+        if (isLead) {
+            delayCounter--;
+            if (delayCounter <= 0 || lastList == null) {
+                delayCounter = 10;
+                lastList = specialPoly.getEntities(this.world);
+                if (lastList.size() > 0) {
+                    for (Entity e : lastList) {
+                        NBTTagCompound compound = e.getEntityData();
+                        compound.setBoolean("inPoly", specialPoly.contains(e));
+                        compound.setInteger("timeSince", 0);
+                    }
                 }
             }
         }

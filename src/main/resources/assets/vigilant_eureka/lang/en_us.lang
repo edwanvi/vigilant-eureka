@@ -23,3 +23,6 @@ message.ley_link_good=It worked!
 message.ley_link_selflink=The feedback loop quickly decays to nothing...
 message.ley_link_doublelink=This link already exists!
 message.ley_link_twoway=Two way links aren't acceptable.
+
+message.ley_solve_good=The links pulse and strengthen.
+message.ley_solve_incomplete=The line isn't complete!
