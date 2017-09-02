@@ -5,10 +5,7 @@ import me.itstheholyblack.vigilant_eureka.blocks.*;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
 import me.itstheholyblack.vigilant_eureka.core.EventHandler;
-import me.itstheholyblack.vigilant_eureka.items.DimKey;
-import me.itstheholyblack.vigilant_eureka.items.ItemBismite;
-import me.itstheholyblack.vigilant_eureka.items.ItemLeyKey;
-import me.itstheholyblack.vigilant_eureka.items.ModItems;
+import me.itstheholyblack.vigilant_eureka.items.*;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
 import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
@@ -73,6 +70,7 @@ public class CommonProxy {
         event.getRegistry().register(new InvisCap());
         event.getRegistry().register(new ItemBismite());
         event.getRegistry().register(new ItemLeyKey());
+        event.getRegistry().register(new ItemLeyRune());
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 }

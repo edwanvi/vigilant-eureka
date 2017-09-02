@@ -43,7 +43,7 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
         super(Material.WOOD, "movingdoor");
         setUnlocalizedName(Reference.MOD_ID + ".movingdoor");
         setRegistryName("movingdoor");
-        setCreativeTab(ModItems.CREATIVETAB);
+        setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {

@@ -20,7 +20,7 @@ public class ItemLeyKey extends Item {
         setRegistryName(Reference.MOD_ID, "ley_key");
         setUnlocalizedName(Reference.MOD_ID + ".ley_key");
         setMaxStackSize(1); // category of one
-        setCreativeTab(ModItems.CREATIVETAB);
+        setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
     @SideOnly(Side.CLIENT)

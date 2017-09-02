@@ -20,8 +20,10 @@ public class ModItems {
     public static ItemBismite bismite;
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":ley_key")
     public static ItemLeyKey leyKey;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":ley_rune")
+    public static ItemLeyRune leyRune;
 
-    public static final CreativeTabs CREATIVETAB = new CreativeTabs("vigilantEureka") {
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs("vigilantEureka") {
         @Override
         public ItemStack getTabIconItem() {
             return new ItemStack(dimKey);

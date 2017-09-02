@@ -11,7 +11,7 @@ public class ItemBismite extends Item {
     public ItemBismite() {
         setRegistryName(Reference.MOD_ID, "bismite");
         setUnlocalizedName(Reference.MOD_ID + ".bismite");
-        setCreativeTab(ModItems.CREATIVETAB);
+        setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
     @SideOnly(Side.CLIENT)

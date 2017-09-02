@@ -28,6 +28,16 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         float f = (the_ticker) / 200.0F;
         float f1 = 0.0F;
 
+        int red = 0;
+        int blue = 0;
+        int green = 0;
+        if (te.isLead()) {
+            green = 255;
+        } else {
+            red = 255;
+            blue = 255;
+        }
+
         if (f > 0.8F) {
             f1 = (f - 0.8F) / 0.2F;
         }
@@ -55,10 +65,10 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
             float f3 = random.nextFloat() * 2.0F + 1.0F + f1 * 2.0F;
             bufferbuilder.begin(6, DefaultVertexFormats.POSITION_COLOR);
             bufferbuilder.pos(0.0D, 0.0D, 0.0D).color(255, 255, 255, (int) (255.0F * (1.0F - f1))).endVertex();
-            bufferbuilder.pos(-0.866D * (double) f3, (double) f2, (double) (-0.5F * f3)).color(255, 0, 255, 0).endVertex();
-            bufferbuilder.pos(0.866D * (double) f3, (double) f2, (double) (-0.5F * f3)).color(255, 0, 255, 0).endVertex();
-            bufferbuilder.pos(0.0D, (double) f2, (double) (1.0F * f3)).color(255, 0, 255, 0).endVertex();
-            bufferbuilder.pos(-0.866D * (double) f3, (double) f2, (double) (-0.5F * f3)).color(255, 0, 255, 0).endVertex();
+            bufferbuilder.pos(-0.866D * (double) f3, (double) f2, (double) (-0.5F * f3)).color(red, green, blue, 0).endVertex();
+            bufferbuilder.pos(0.866D * (double) f3, (double) f2, (double) (-0.5F * f3)).color(red, green, blue, 0).endVertex();
+            bufferbuilder.pos(0.0D, (double) f2, (double) (1.0F * f3)).color(red, green, blue, 0).endVertex();
+            bufferbuilder.pos(-0.866D * (double) f3, (double) f2, (double) (-0.5F * f3)).color(red, green, blue, 0).endVertex();
             tessellator.draw();
         }
 

@@ -18,7 +18,7 @@ public class BlockBismuthOre extends Block {
         super(Material.ROCK);
         setUnlocalizedName(Reference.MOD_ID + ".bismuth_ore");
         setRegistryName("bismuth_ore");
-        setCreativeTab(ModItems.CREATIVETAB);
+        setCreativeTab(ModItems.CREATIVE_TAB);
         setHardness(3.0f);
         setHarvestLevel("pickaxe", 2);
     }

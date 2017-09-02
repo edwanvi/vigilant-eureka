@@ -20,7 +20,7 @@ public class WarpBoots extends ItemArmor {
         super(ArmorTypes.BUGGER_ME_MAT, 0, EntityEquipmentSlot.FEET);
         setUnlocalizedName(Reference.MOD_ID + "." + "warp_boots");
         setRegistryName("warp_boots");
-        setCreativeTab(ModItems.CREATIVETAB);
+        setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
     @SideOnly(Side.CLIENT)

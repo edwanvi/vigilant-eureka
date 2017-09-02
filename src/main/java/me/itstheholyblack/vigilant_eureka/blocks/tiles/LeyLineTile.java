@@ -1,13 +1,11 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
+import me.itstheholyblack.vigilant_eureka.core.EnumLeyTypes;
 import me.itstheholyblack.vigilant_eureka.core.Polygon;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.nbt.*;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.Sys;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,11 +31,13 @@ public class LeyLineTile extends TileEntity implements ITickable {
     private int delayCounter = 10;
     private List<Entity> lastList;
     private boolean isLead;
+    public EnumLeyTypes type;
 
     public LeyLineTile() {
         super();
         this.link_out = new BlockPos(BlockPos.ORIGIN); // this will be very quickly changed
         this.polygon = new ArrayList<>();
+        this.type = EnumLeyTypes.FLOATER;
     }
 
     public EnumLinkResults addLinkOut(BlockPos bp) {
@@ -95,6 +96,11 @@ public class LeyLineTile extends TileEntity implements ITickable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
+        if (!compound.getString("type").equals("")) {
+            type = EnumLeyTypes.valueOf(compound.getString("type"));
+        } else {
+            type = EnumLeyTypes.FLOATER;
+        }
         if (compound.getBoolean("isLinkedOut")) {
             this.link_out = NBTUtil.getPosFromTag(compound.getCompoundTag("link_out"));
         }
@@ -128,6 +134,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
             compound.setTag("poly", n);
         }
         compound.setBoolean("lead", isLead);
+        compound.setString("type", type.name());
         return compound;
     }
 
@@ -150,6 +157,9 @@ public class LeyLineTile extends TileEntity implements ITickable {
                         NBTTagCompound compound = e.getEntityData();
                         compound.setBoolean("inPoly", specialPoly.contains(e));
                         compound.setInteger("timeSince", 0);
+                        NBTTagList typesList = compound.getTagList("leyTypes", 8);
+                        typesList.appendTag(new NBTTagString(this.type.toString()));
+                        compound.setTag("leyTypes", typesList);
                     }
                 }
             }
@@ -186,7 +196,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().add(-5, -5, -5), getPos().add(5, 5, 5));
+        return INFINITE_EXTENT_AABB;
     }
 
     public enum EnumLinkResults {
