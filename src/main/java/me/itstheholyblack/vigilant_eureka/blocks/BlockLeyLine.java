@@ -2,6 +2,7 @@ package me.itstheholyblack.vigilant_eureka.blocks;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
+import me.itstheholyblack.vigilant_eureka.core.EnumLeyTypes;
 import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.core.PolyHelper;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
@@ -83,6 +84,9 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
                 playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_solve_incomplete").setStyle(new Style().setColor(TextFormatting.RED)), true);
                 return false;
             }
+        } else if (stack.getItem().equals(ModItems.leyRune)) {
+            LeyLineTile thisTile = getTileEntity(worldIn, pos);
+            thisTile.type = EnumLeyTypes.valueOf(NBTUtil.getTagCompoundSafe(stack).getString("type"));
         }
         return false;
     }

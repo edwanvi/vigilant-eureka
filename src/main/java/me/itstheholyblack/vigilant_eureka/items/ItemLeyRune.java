@@ -25,7 +25,7 @@ public class ItemLeyRune extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer playerIn, EnumHand hand) {
         ItemStack stack = playerIn.getHeldItem(hand);
         NBTTagCompound compound = NBTUtil.getTagCompoundSafe(stack);
-        compound.setString("type", "FLOATER");
+        compound.setString("type", "SPEED");
         String type = compound.getString("type");
         System.out.println(EnumLeyTypes.valueOf(type));
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
