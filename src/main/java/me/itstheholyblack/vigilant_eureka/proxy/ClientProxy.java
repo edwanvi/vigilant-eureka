@@ -44,7 +44,7 @@ public class ClientProxy extends CommonProxy {
         super.preInit(event);
         Keybinds.initWarpKey();
     }
-    
+
     /**
      * Init method.
      * Crazy one-liner courtesy of Paul Fulham.
