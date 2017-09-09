@@ -156,10 +156,9 @@ public class LeyLineTile extends TileEntity implements ITickable {
                     for (Entity e : lastList) {
                         NBTTagCompound compound = e.getEntityData();
                         compound.setBoolean("inPoly", specialPoly.contains(e));
-                        compound.setInteger("timeSince", 0);
+                        compound.setTag("masterPos", NBTUtil.createPosTag(this.pos));
                         NBTTagList typesList = compound.getTagList("leyTypes", 8);
                         typesList.appendTag(new NBTTagString(this.type.toString()));
-                        compound.setTag("leyTypes", typesList);
                     }
                 }
             }
@@ -193,6 +192,14 @@ public class LeyLineTile extends TileEntity implements ITickable {
         this.readFromNBT(packet.getNbtCompound());
     }
 
+    public Polygon getSpecialPoly() {
+        return specialPoly;
+    }
+
+    public EnumLeyTypes getType() {
+        return type;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
@@ -202,4 +209,5 @@ public class LeyLineTile extends TileEntity implements ITickable {
     public enum EnumLinkResults {
         SUCCEED, SELFLINK, DOUBLELINK, TWOWAY;
     }
+
 }

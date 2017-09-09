@@ -1,16 +1,16 @@
 package me.itstheholyblack.vigilant_eureka.core;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -19,12 +19,10 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
-
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class EventHandler {
 
-    private final double float_strength = 0.25;
+    private double float_strength = 0.25;
 
     @SubscribeEvent
     public void livingTick(LivingEvent.LivingUpdateEvent event) {
@@ -61,43 +59,36 @@ public class EventHandler {
                 i++;
             }
         }
-        if (e.getEntityData().getBoolean("inPoly") && e.getEntityData().getInteger("timeSince") < 10) {
-            // increment time (recalculate when > 10)
-            e.getEntityData().setInteger("timeSince", e.getEntityData().getInteger("timeSince") + 1);
-            NBTTagList leyTypes = e.getEntityData().getTagList("leyTypes", 8);
-            ArrayList<EnumLeyTypes> enumTypes = new ArrayList<>();
-            int i = 0;
-            for (NBTBase n : leyTypes) {
-                String str = leyTypes.getStringTagAt(i);
-                try {
-                    enumTypes.add(EnumLeyTypes.valueOf(str));
-                } catch (IllegalArgumentException ex) {
-                    // no type set or someone's fucking around
-                    enumTypes.add(EnumLeyTypes.ACTUALLY_NOTHING);
-                }
-                i++;
-            }
-            for (EnumLeyTypes enumType : enumTypes) {
-                switch (enumType) {
-                    case FLOATER:
-                        if (!e.getEntityData().getBoolean("floated")) {
-                            e.getEntityData().setBoolean("floated", true);
-                        }
-                        break;
-                    case CLEANSER:
-                        e.clearActivePotions();
-                        break;
-                    case SPEED:
-                        e.addPotionEffect(new PotionEffect(MobEffects.SPEED, 1000, 1, true, true));
-                        break;
-                    default:
-                        break;
+        if (e.getEntityData().getBoolean("inPoly")) {
+            NBTTagCompound entityData = e.getEntityData();
+            BlockPos pos = NBTUtil.getPosFromTag(entityData.getCompoundTag("masterPos"));
+            // test if entity still in polygon
+            TileEntity tile = e.getEntityWorld().getTileEntity(pos);
+            if (tile instanceof LeyLineTile) {
+                Polygon polygon = ((LeyLineTile) tile).getSpecialPoly();
+                if (polygon.contains(e)) {
+                    // add effects
+                    EnumLeyTypes enumType = ((LeyLineTile) tile).getType();
+                    switch (enumType) {
+                        case FLOATER:
+                            if (!entityData.getBoolean("floated")) {
+                                entityData.setBoolean("floated", true);
+                            }
+                            break;
+                        case CLEANSER:
+                            e.clearActivePotions();
+                            break;
+                        case SPEED:
+                            e.addVelocity(e.motionX * 0.5, 0, e.motionZ * 0.5);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    // exit and remove entity data
+                    removeLeyNBT(e);
                 }
             }
-        } else if (e.getEntityData().getInteger("timeSince") >= 10) {
-            e.getEntityData().removeTag("timeSince");
-            e.getEntityData().removeTag("inPoly");
-            e.getEntityData().setBoolean("floated", false);
         }
     }
 
@@ -122,5 +113,11 @@ public class EventHandler {
         if (event.getEntity().getEntityData().getBoolean("floated")) {
             event.getEntity().addVelocity(0, float_strength, 0);
         }
+    }
+
+    private static void removeLeyNBT(EntityLivingBase e) {
+        e.getEntityData().removeTag("timeSince");
+        e.getEntityData().removeTag("inPoly");
+        e.getEntityData().setBoolean("floated", false);
     }
 }
