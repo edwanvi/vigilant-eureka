@@ -2,6 +2,8 @@ package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
+import me.itstheholyblack.vigilant_eureka.blocks.MovingCastleDoor;
+import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
 import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.util.RayTraceHelper;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -15,8 +17,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -47,11 +52,7 @@ public class DimKey extends Item {
             } catch (NullPointerException e) {
                 look = playerIn.getPosition();
             }
-            if (world.getBlockState(look).getBlock().equals(ModBlocks.movingdoor)) {
-                if (tag.getInteger("y") <= 0) {
-                    return new ActionResult<>(EnumActionResult.PASS, stack);
-                }
-            } else {
+            if (!world.getBlockState(look).getBlock().equals(ModBlocks.movingdoor)) {
                 int x = playerIn.getPosition().getX();
                 int y = playerIn.getPosition().getY();
                 int z = playerIn.getPosition().getZ();
@@ -63,6 +64,44 @@ public class DimKey extends Item {
             }
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+    }
+
+    @Override
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack stack = playerIn.getHeldItem(hand);
+        NBTTagCompound tag = NBTUtil.getTagCompoundSafe(stack);
+        System.out.println(worldIn.getBlockState(pos).getBlock());
+
+        if (worldIn.getBlockState(pos).getBlock().equals(ModBlocks.movingdoor)) {
+            System.out.println("clicked on door");
+            MovingCastleDoorTile t;
+            if (worldIn.getBlockState(pos).getValue(MovingCastleDoor.IS_TOP)) {
+                t = (MovingCastleDoorTile) worldIn.getTileEntity(pos);
+            } else {
+                t = (MovingCastleDoorTile) worldIn.getTileEntity(pos.up());
+            }
+            if (tag != null && t != null && tag.getInteger("y") > 0) {
+                t.setDestination(
+                        new BlockPos(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z")),
+                        stack.getTagCompound().getInteger("dim"));
+                playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "Click."), true);
+                return EnumActionResult.SUCCESS;
+            } else if (tag.getInteger("y") <= 0) {
+                playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "It won't turn."), true);
+                return EnumActionResult.FAIL;
+            }
+        }
+
+        System.out.println("Did not click door, was " + worldIn.getBlockState(pos).getBlock() + " instead.");
+        int x = playerIn.getPosition().getX();
+        int y = playerIn.getPosition().getY();
+        int z = playerIn.getPosition().getZ();
+        int dim = playerIn.dimension;
+        tag.setInteger("x", x);
+        tag.setInteger("y", y);
+        tag.setInteger("z", z);
+        tag.setInteger("dim", dim);
+        return EnumActionResult.SUCCESS;
     }
 
     @SideOnly(Side.CLIENT)

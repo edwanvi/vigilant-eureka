@@ -19,13 +19,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -104,32 +99,6 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
             } else {
                 System.out.println(t.getDestination().getY());
             }
-        }
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-                                    EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) {
-            return true;
-        } else {
-            ItemStack stack = playerIn.getHeldItem(hand);
-            if (stack.getItem().equals(ModItems.dimKey)) {
-                MovingCastleDoorTile t = this.getTileEntity(worldIn, pos);
-                if (t == null) {
-                    t = this.getTileEntity(worldIn, pos.up());
-                }
-                NBTTagCompound compound = stack.getTagCompound();
-                if (compound != null && t != null && compound.getInteger("y") > 0) {
-                    t.setDestination(
-                            new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z")),
-                            stack.getTagCompound().getInteger("dim"));
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "Click."), true);
-                } else if (compound.getInteger("y") <= 0) {
-                    playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "It won't turn."), true);
-                }
-            }
-            return true;
         }
     }
 
