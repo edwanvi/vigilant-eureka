@@ -19,6 +19,6 @@ public class Keybinds {
     }
 
     public static void initWarpKey() {
-        warpKey = init("warp_key", Keyboard.KEY_C, Reference.MOD_ID + ".gui.keybinds");
+        warpKey = init("warp_key", Keyboard.KEY_R, Reference.MOD_ID + ".gui.keybinds");
     }
 }
