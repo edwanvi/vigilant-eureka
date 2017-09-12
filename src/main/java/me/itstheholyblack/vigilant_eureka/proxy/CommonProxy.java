@@ -10,6 +10,7 @@ import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
 import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
 import me.itstheholyblack.vigilant_eureka.world.WorldGenBismuth;
+import me.itstheholyblack.vigilant_eureka.world.WorldGenLey;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -40,6 +41,7 @@ public class CommonProxy {
     public void init(FMLInitializationEvent e) {
         WorldGenBismuth worldGenBismuth = new WorldGenBismuth();
         GameRegistry.registerWorldGenerator(worldGenBismuth, 100);
+        GameRegistry.registerWorldGenerator(new WorldGenLey(), 100);
         GameRegistry.addSmelting(ModItems.bismite, new ItemStack(ModItems.leyKey), 0.7F);
     }
 
@@ -71,6 +73,7 @@ public class CommonProxy {
         event.getRegistry().register(new ItemBismite());
         event.getRegistry().register(new ItemLeyKey());
         event.getRegistry().register(new ItemLeyRune());
+        event.getRegistry().register(new DebugStick());
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 }
