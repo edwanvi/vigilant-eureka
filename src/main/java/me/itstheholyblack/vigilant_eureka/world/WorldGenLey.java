@@ -33,7 +33,6 @@ public class WorldGenLey implements IWorldGenerator {
             // world randomizer instance
             Random rand = world.rand;
             if (rand.nextInt(100) < 25) {
-                System.out.println("generating ley point");
                 // get values for template
                 WorldServer server = (WorldServer) world;
                 TemplateManager templateManager = server.getStructureTemplateManager();
@@ -44,8 +43,14 @@ public class WorldGenLey implements IWorldGenerator {
                 int blockX = chunkX * 16;
                 int blockZ = chunkZ * 16;
                 // get block level generation position
-                int randX = blockX + rand.nextInt(16);
-                int randZ = blockZ + rand.nextInt(16);
+                int XModifier = rand.nextInt(16);
+                int ZModifier = rand.nextInt(16);
+                while (!(XModifier == 0 || XModifier == 15 || ZModifier == 0 || ZModifier == 15)) {
+                    XModifier = rand.nextInt(16);
+                    ZModifier = rand.nextInt(16);
+                }
+                int randX = blockX + XModifier;
+                int randZ = blockZ + ZModifier;
                 // get ground level + 1 at (randX, randZ)
                 int y = 1 + getGroundFromAbove(world, randX, randZ);
                 PlacementSettings settings = new PlacementSettings();
