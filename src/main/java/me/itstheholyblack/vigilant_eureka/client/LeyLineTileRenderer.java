@@ -86,12 +86,12 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         GlStateManager.pushMatrix();
         BlockPos pos = te.getLinkOut();
         if (!pos.equals(BlockPos.ORIGIN)) {
-            bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
             bufferbuilder.setTranslation(
                     -TileEntityRendererDispatcher.staticPlayerX,
                     -TileEntityRendererDispatcher.staticPlayerY,
                     -TileEntityRendererDispatcher.staticPlayerZ
             );
+            bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
             bufferbuilder.pos(te.getPos().getX() + 0.5, te.getPos().getY() + 0.5, te.getPos().getZ() + 0.5).endVertex();
             bufferbuilder.pos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).endVertex();
             tessellator.draw();
