@@ -83,21 +83,21 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         RenderHelper.enableStandardItemLighting();
         // END ENDERDRAGON CODE
 
-        GlStateManager.pushMatrix();
+
         BlockPos pos = te.getLinkOut();
         if (!pos.equals(BlockPos.ORIGIN)) {
-            bufferbuilder.setTranslation(
-                    -TileEntityRendererDispatcher.staticPlayerX,
-                    -TileEntityRendererDispatcher.staticPlayerY,
-                    -TileEntityRendererDispatcher.staticPlayerZ
-            );
-            bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-            bufferbuilder.pos(te.getPos().getX() + 0.5, te.getPos().getY() + 0.5, te.getPos().getZ() + 0.5).endVertex();
-            bufferbuilder.pos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).endVertex();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
+            bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+
+            bufferbuilder.pos(te.getPos().getX() + 0.25, te.getPos().getY() + 0.25, te.getPos().getZ() + 0.25).endVertex();
+            bufferbuilder.pos(te.getPos().getX() + 0.75, te.getPos().getY() + 0.75, te.getPos().getZ() + 0.75).endVertex();
+
+            bufferbuilder.pos(pos.getX() + 0.25, pos.getY() + 0.25, pos.getZ() + 0.25).endVertex();
+            bufferbuilder.pos(pos.getX() + 0.75, pos.getY() + 0.75, pos.getZ() + 0.75).endVertex();
             tessellator.draw();
-            bufferbuilder.setTranslation(0, 0, 0);
+            GlStateManager.popMatrix();
         }
-        GlStateManager.popMatrix();
     }
 
     @Override
