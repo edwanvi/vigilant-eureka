@@ -22,6 +22,8 @@ public class ModItems {
     public static ItemLeyKey leyKey;
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":ley_rune")
     public static ItemLeyRune leyRune;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":debug_stick")
+    public static DebugStick debugStick;
 
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs("vigilantEureka") {
         @Override
@@ -37,5 +39,6 @@ public class ModItems {
         invisCap.initModel();
         bismite.initModel();
         leyKey.initModel();
+        debugStick.initModel();
     }
 }

@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
@@ -83,21 +82,36 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         RenderHelper.enableStandardItemLighting();
         // END ENDERDRAGON CODE
 
-        GlStateManager.pushMatrix();
+
         BlockPos pos = te.getLinkOut();
         if (!pos.equals(BlockPos.ORIGIN)) {
-            bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-            bufferbuilder.setTranslation(
-                    -TileEntityRendererDispatcher.staticPlayerX,
-                    -TileEntityRendererDispatcher.staticPlayerY,
-                    -TileEntityRendererDispatcher.staticPlayerZ
-            );
-            bufferbuilder.pos(te.getPos().getX() + 0.5, te.getPos().getY() + 0.5, te.getPos().getZ() + 0.5).endVertex();
-            bufferbuilder.pos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).endVertex();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+            GlStateManager.disableAlpha();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
+
+            bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+
+            bufferbuilder.pos(0.5, 0.375, 0.5).color(255, 255, 255, 255).endVertex();
+            bufferbuilder.pos(0.5, 0.625, 0.5).color(255, 255, 255, 255).endVertex();
+
+            bufferbuilder.pos(
+                    (pos.getX() - te.getPos().getX()) + 0.5,
+                    (pos.getY() - te.getPos().getY()) + 0.375,
+                    (pos.getZ() - te.getPos().getZ()) + 0.5)
+                    .color(255, 255, 255, 255).endVertex();
+            bufferbuilder.pos(
+                    (pos.getX() - te.getPos().getX()) + 0.5,
+                    (pos.getY() - te.getPos().getY()) + 0.625,
+                    (pos.getZ() - te.getPos().getZ()) + 0.5)
+                    .color(255, 255, 255, 255).endVertex();
             tessellator.draw();
-            bufferbuilder.setTranslation(0, 0, 0);
+
+            GlStateManager.popMatrix();
+            GlStateManager.disableBlend();
+            GlStateManager.enableAlpha();
         }
-        GlStateManager.popMatrix();
     }
 
     @Override

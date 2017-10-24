@@ -5,6 +5,7 @@ import me.itstheholyblack.vigilant_eureka.core.EnumLeyTypes;
 import me.itstheholyblack.vigilant_eureka.core.Polygon;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -12,6 +13,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -154,6 +158,13 @@ public class LeyLineTile extends TileEntity implements ITickable {
                 if (lastList.size() > 0) {
                     for (Entity e : lastList) {
                         NBTTagCompound compound = e.getEntityData();
+                        if (!(compound.getBoolean("inPoly")) && e instanceof EntityPlayer) {
+                            ((EntityPlayer) e).sendStatusMessage(new TextComponentTranslation("message.enter_ley")
+                                    .setStyle(new Style()
+                                            .setItalic(true)
+                                            .setColor(TextFormatting.AQUA)
+                                    ), true);
+                        }
                         compound.setBoolean("inPoly", specialPoly.contains(e));
                         compound.setTag("masterPos", NBTUtil.createPosTag(this.pos));
                         NBTTagList typesList = compound.getTagList("leyTypes", 8);
