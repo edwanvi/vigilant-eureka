@@ -43,8 +43,9 @@ public class WorldGenLey implements IWorldGenerator {
                 // get values for template
                 WorldServer server = (WorldServer) world;
                 TemplateManager templateManager = server.getStructureTemplateManager();
+                // random template resource location
                 ResourceLocation r = resourceLocations.get(random.nextInt(resourceLocations.size()));
-                // fetch template
+                // get template
                 Template t = templateManager.get(world.getMinecraftServer(), r);
                 // actual block level co-ords of chunk
                 int blockX = chunkX * 16;
@@ -52,6 +53,7 @@ public class WorldGenLey implements IWorldGenerator {
                 // get block level generation position
                 int XModifier = random.nextInt(16);
                 int ZModifier = random.nextInt(16);
+                // pick random values in (
                 while (!(XModifier == 0 || XModifier == 15 || ZModifier == 0 || ZModifier == 15)) {
                     XModifier = random.nextInt(16);
                     ZModifier = random.nextInt(16);
@@ -69,12 +71,13 @@ public class WorldGenLey implements IWorldGenerator {
                     System.out.println("Y < 0");
                     return;
                 }
-                System.out.format("Generating %s at (%d, %d, %d)\n", r.toString(), randX, y, randZ);
+                // System.out.format("Generating %s at (%d, %d, %d)\n", r.toString(), randX, y, randZ);
                 PlacementSettings settings = new PlacementSettings();
+                BlockPos generationPos = new BlockPos(randX, y, randZ);
                 settings.setRandom(world.rand);
                 // Get random rotation value
-                settings.setRotation(Rotation.values()[random.nextInt(4)]);
-                t.addBlocksToWorld(world, new BlockPos(randX, y, randZ), settings);
+                settings.setRotation(Rotation.values()[settings.getRandom(generationPos).nextInt(4)]);
+                t.addBlocksToWorld(world, generationPos, settings);
             }
         }
     }
