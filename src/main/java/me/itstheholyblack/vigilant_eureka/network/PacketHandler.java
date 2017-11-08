@@ -24,5 +24,6 @@ public class PacketHandler {
     public static void registerMessages() {
         // Register messages which are sent from the client to the server here:
         INSTANCE.registerMessage(PacketSendKey.Handler.class, PacketSendKey.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketEndericPoof.Handler.class, PacketEndericPoof.class, nextID(), Side.CLIENT);
     }
 }

@@ -5,7 +5,6 @@ import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import me.itstheholyblack.vigilant_eureka.util.RayTraceHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -13,8 +12,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.Random;
 
 public class PacketSendKey implements IMessage {
     private BlockPos blockPos;
@@ -59,20 +56,12 @@ public class PacketSendKey implements IMessage {
                 } catch (NullPointerException e) {
                     look = playerEntity.getPosition();
                 }
-                if (look.equals(playerEntity.getPosition()) || playerEntity.getCooldownTracker().hasCooldown(ModItems.warpBoots)) {
+                if (playerEntity.getCooldownTracker().hasCooldown(ModItems.warpBoots)) {
                     return;
                 } else {
-                    Random rand = playerEntity.getRNG();
                     playerEntity.getCooldownTracker().setCooldown(ModItems.warpBoots, 20);
                     playerEntity.setPositionAndUpdate(look.getX(), look.getY() + 2, look.getZ());
-                    for (int i = 0; i < 200; ++i) {
-                        playerEntity.getServerWorld().spawnParticle(EnumParticleTypes.PORTAL,
-                                playerEntity.posX + (rand.nextDouble() - 0.5D) * (double) playerEntity.width,
-                                playerEntity.posY + rand.nextDouble() * (double) playerEntity.height - 0.25D,
-                                playerEntity.posZ + (rand.nextDouble() - 0.5D) * (double) playerEntity.width,
-                                10,
-                                0.0D, 0D, 0D, 10, 0);
-                    }
+                    PacketHandler.INSTANCE.sendToAll(new PacketEndericPoof(look.up(2)));
                 }
             }
         }
