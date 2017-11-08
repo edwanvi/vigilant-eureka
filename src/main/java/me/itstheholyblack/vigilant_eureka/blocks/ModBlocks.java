@@ -12,9 +12,17 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":movingdoor")
     public static MovingCastleDoor movingdoor;
 
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":leyline")
+    public static BlockLeyLine leyLine;
+
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":bismuth_ore")
+    public static BlockBismuthOre bismuthOre;
+
     @SideOnly(Side.CLIENT)
     public static void initModels() {
         firstBlock.initModel();
         movingdoor.initModel();
+        bismuthOre.initModel();
+        leyLine.initModel();
     }
 }

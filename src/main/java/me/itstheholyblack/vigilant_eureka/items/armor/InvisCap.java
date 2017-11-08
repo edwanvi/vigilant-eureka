@@ -20,7 +20,7 @@ public class InvisCap extends ItemArmor {
         super(ArmorTypes.BUGGER_ME_MAT, 0, EntityEquipmentSlot.HEAD);
         setUnlocalizedName(Reference.MOD_ID + "." + "invis_cap");
         setRegistryName("invis_cap");
-        setCreativeTab(ModItems.CREATIVETAB);
+        setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
     @SideOnly(Side.CLIENT)

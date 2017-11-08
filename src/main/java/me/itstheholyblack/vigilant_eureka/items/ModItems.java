@@ -16,8 +16,16 @@ public class ModItems {
     public static WarpBoots warpBoots;
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":invis_cap")
     public static InvisCap invisCap;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":bismite")
+    public static ItemBismite bismite;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":ley_key")
+    public static ItemLeyKey leyKey;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":ley_rune")
+    public static ItemLeyRune leyRune;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":debug_stick")
+    public static DebugStick debugStick;
 
-    public static final CreativeTabs CREATIVETAB = new CreativeTabs("vigilantEureka") {
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs("vigilantEureka") {
         @Override
         public ItemStack getTabIconItem() {
             return new ItemStack(dimKey);
@@ -29,5 +37,8 @@ public class ModItems {
         dimKey.initModel();
         warpBoots.initModel();
         invisCap.initModel();
+        bismite.initModel();
+        leyKey.initModel();
+        debugStick.initModel();
     }
 }

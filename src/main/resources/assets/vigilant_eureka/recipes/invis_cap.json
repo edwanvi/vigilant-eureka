@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "LLL",
+        "LBL"
+    ],
+    "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "item": "vigilant_eureka:ley_key"
+    }
+  },
+  "result": {
+    "item": "vigilant_eureka:invis_cap"
+  }
+}

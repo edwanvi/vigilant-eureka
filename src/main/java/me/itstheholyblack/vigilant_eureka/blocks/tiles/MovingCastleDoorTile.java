@@ -22,11 +22,6 @@ public class MovingCastleDoorTile extends TileEntity {
         markDirty();
     }
 
-    private void setDestination_NoOther(FullPosition pos) {
-        this.dest_pos = pos;
-        markDirty();
-    }
-
     public FullPosition getDestination() {
         return this.dest_pos;
     }
