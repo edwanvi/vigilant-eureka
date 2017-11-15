@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
     public BlockLeyLine() {
         super(Material.ROCK, "leyline");
+        this.setHardness(Float.POSITIVE_INFINITY);
         setUnlocalizedName(Reference.MOD_ID + ".leyline");
         setRegistryName("leyline");
         setCreativeTab(ModItems.CREATIVE_TAB);
