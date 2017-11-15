@@ -32,6 +32,10 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         int green = 0;
         if (te.isLead()) {
             green = 255;
+        } else if (te.getLinkOut().equals(BlockPos.ORIGIN.down())) {
+            red = 0;
+            blue = 255;
+            green = 0;
         } else {
             red = 255;
             blue = 255;
@@ -84,7 +88,7 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
 
 
         BlockPos pos = te.getLinkOut();
-        if (!pos.equals(BlockPos.ORIGIN)) {
+        if (!pos.equals(BlockPos.ORIGIN) && !pos.equals(BlockPos.ORIGIN.down())) {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             GlStateManager.disableAlpha();

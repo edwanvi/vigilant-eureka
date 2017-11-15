@@ -141,15 +141,35 @@ public class LeyLineTile extends TileEntity implements ITickable {
         return compound;
     }
 
+    public boolean isLinked() {
+        return !this.link_out.equals(BlockPos.ORIGIN) && !this.link_out.equals(BlockPos.ORIGIN.down());
+    }
+
     @Override
     public void update() {
         ticks = ticks + 0.1F;
-        if (!this.world.isRemote && !this.link_out.equals(BlockPos.ORIGIN) && this.world.isAreaLoaded(this.getPos(), 16)) {
+
+        if (this.link_out.equals(BlockPos.ORIGIN.down())) {
+            this.link_out = BlockPos.ORIGIN;
+            markDirty();
+        }
+
+        if (!this.world.isRemote && this.isLinked() && this.world.isAreaLoaded(this.getPos(), 16)) {
             if (!this.getWorld().getBlockState(link_out).getBlock().equals(ModBlocks.leyLine)) {
-                link_out = BlockPos.ORIGIN;
+                link_out = BlockPos.ORIGIN.down();
                 markDirty();
+                return;
+            } else {
+                LeyLineTile te = (LeyLineTile) this.world.getTileEntity(link_out);
+                if (te.getLinkOut().equals(BlockPos.ORIGIN.down())) {
+                    System.out.println("Linked to BROKEN link node " + this.link_out);
+                    this.link_out = BlockPos.ORIGIN.down();
+                    markDirty();
+                    return;
+                }
             }
         }
+
         if (isLead) {
             delayCounter--;
             if (delayCounter <= 0 || lastList == null) {
