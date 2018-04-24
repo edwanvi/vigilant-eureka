@@ -89,6 +89,7 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
 
         BlockPos pos = te.getLinkOut();
         if (!pos.equals(BlockPos.ORIGIN) && !pos.equals(BlockPos.ORIGIN.down())) {
+            GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             GlStateManager.disableAlpha();
@@ -113,6 +114,7 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
             tessellator.draw();
 
             GlStateManager.popMatrix();
+            GlStateManager.enableTexture2D();
             GlStateManager.disableBlend();
             GlStateManager.enableAlpha();
         }
