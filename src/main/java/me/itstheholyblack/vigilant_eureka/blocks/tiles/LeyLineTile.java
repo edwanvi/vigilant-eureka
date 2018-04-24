@@ -237,7 +237,6 @@ public class LeyLineTile extends TileEntity implements ITickable {
     }
 
     public enum EnumLinkResults {
-        SUCCEED, SELFLINK, DOUBLELINK, TWOWAY;
+        SUCCEED, SELFLINK, DOUBLELINK, TWOWAY
     }
-
 }

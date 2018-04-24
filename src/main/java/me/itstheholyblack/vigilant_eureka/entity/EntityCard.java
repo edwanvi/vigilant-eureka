@@ -120,6 +120,12 @@ public class EntityCard extends EntityThrowable {
                     this.world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
                 }
                 break;
+            default:
+                if (!this.world.isRemote) {
+                    EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(ModItems.itemCard, 1));
+                    this.world.spawnEntity(entityItem);
+                }
+                break;
         }
         this.setDead();
     }
