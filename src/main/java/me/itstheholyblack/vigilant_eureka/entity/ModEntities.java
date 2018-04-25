@@ -16,12 +16,13 @@ public class ModEntities {
                 new ResourceLocation("thrown_card"),
                 EntityCard.class,
                 Reference.MOD_ID + ":thrown_card",
-                ++id,
+                id++,
                 Eureka.instance,
                 64,
                 1,
                 true
         );
+        EntityRegistry.registerModEntity(new ResourceLocation("suspended_block"), EntitySuspendedBlock.class, Reference.MOD_ID + ":suspended_block", id++, Eureka.instance, 64, 1, true);
     }
 
     @SideOnly(Side.CLIENT)

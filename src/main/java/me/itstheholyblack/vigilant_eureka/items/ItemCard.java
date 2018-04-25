@@ -33,7 +33,7 @@ public class ItemCard extends Item {
         setMaxStackSize(128);
         setCreativeTab(ModItems.CREATIVE_TAB);
 
-        for (Item i : new Item[]{Items.SNOWBALL, Item.getItemFromBlock(Blocks.ICE), Item.getItemFromBlock(Blocks.PACKED_ICE)}) {
+        for (Item i : new Item[]{Items.SNOWBALL, Item.getItemFromBlock(Blocks.SNOW), Item.getItemFromBlock(Blocks.SNOW_LAYER), Item.getItemFromBlock(Blocks.ICE), Item.getItemFromBlock(Blocks.PACKED_ICE)}) {
             TYPE_MAP.put(i, EntityCard.TYPES.COLD);
         }
 

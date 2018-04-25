@@ -19,7 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityCard extends EntityThrowable {
@@ -134,16 +133,31 @@ public class EntityCard extends EntityThrowable {
                     } else if (state.getBlock().equals(Blocks.WATER)) {
                         this.world.setBlockState(this.getPosition(), Blocks.ICE.getDefaultState());
                     } else {
-                        IBlockState[] states = new IBlockState[] {
+                        IBlockState[] states = new IBlockState[]{
                                 Blocks.ICE.getDefaultState(),
                                 Blocks.SNOW.getDefaultState(),
-                                Blocks.PACKED_ICE.getDefaultState()
+                                Blocks.PACKED_ICE.getDefaultState(),
+                                Blocks.FROSTED_ICE.getDefaultState()
                         };
-                        int index = ThreadLocalRandom.current().nextInt(0, states.length);
-                        IBlockState cold_thing = states[index];
-                        EntityFallingBlock efb = new EntityFallingBlock(this.world, this.posX, this.posY + 1, this.posZ, cold_thing);
-                        efb.fallTime = 1;
-                        this.world.spawnEntity(efb);
+                        BlockPos pos = new BlockPos(r.hitVec.addVector(0, 1, 0));
+                        for (int i = -1; i <= 1; ++i) {
+                            for (int j = -1; j <= 1; ++j) {
+                                for (int d = -1; d <= 1; ++d) {
+                                    pos.add(i, j, d);
+
+                                    int index = ThreadLocalRandom.current().nextInt(0, states.length);
+                                    IBlockState cold_thing = states[index];
+                                    EntityFallingBlock efb = new EntitySuspendedBlock(this.world, pos.getX(), pos.getY(), pos.getZ(), cold_thing);
+                                    efb.motionX += ((double) i) / ThreadLocalRandom.current().nextDouble(1, 2.5);
+                                    efb.motionY += ((double) j) / ThreadLocalRandom.current().nextDouble(1, 2.5);
+                                    efb.motionZ += ((double) d) / ThreadLocalRandom.current().nextDouble(1, 2.5);
+                                    efb.fallTime = 1;
+                                    efb.shouldDropItem = false;
+                                    efb.setNoGravity(true);
+                                    this.world.spawnEntity(efb);
+                                }
+                            }
+                        }
                     }
                 }
                 break;
