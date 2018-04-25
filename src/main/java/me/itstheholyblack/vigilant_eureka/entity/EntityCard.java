@@ -2,7 +2,9 @@ package me.itstheholyblack.vigilant_eureka.entity;
 
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import me.itstheholyblack.vigilant_eureka.util.FullPosition;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
@@ -16,6 +18,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class EntityCard extends EntityThrowable {
 
@@ -119,6 +124,27 @@ public class EntityCard extends EntityThrowable {
                 } else {
                     BlockPos pos = r.getBlockPos();
                     this.world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
+                }
+                break;
+            case COLD:
+                if (r.typeOfHit.equals(RayTraceResult.Type.BLOCK) && !this.world.isRemote) {
+                    IBlockState state = this.world.getBlockState(this.getPosition());
+                    if (state.getBlock().equals(Blocks.ICE)) {
+                        this.world.setBlockState(this.getPosition(), Blocks.PACKED_ICE.getDefaultState());
+                    } else if (state.getBlock().equals(Blocks.WATER)) {
+                        this.world.setBlockState(this.getPosition(), Blocks.ICE.getDefaultState());
+                    } else {
+                        IBlockState[] states = new IBlockState[] {
+                                Blocks.ICE.getDefaultState(),
+                                Blocks.SNOW.getDefaultState(),
+                                Blocks.PACKED_ICE.getDefaultState()
+                        };
+                        int index = ThreadLocalRandom.current().nextInt(0, states.length);
+                        IBlockState cold_thing = states[index];
+                        EntityFallingBlock efb = new EntityFallingBlock(this.world, this.posX, this.posY + 1, this.posZ, cold_thing);
+                        efb.fallTime = 1;
+                        this.world.spawnEntity(efb);
+                    }
                 }
                 break;
             case DIMENSIONAL:
