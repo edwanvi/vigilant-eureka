@@ -3,7 +3,6 @@ package me.itstheholyblack.vigilant_eureka.items;
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.entity.EntityCard;
-import me.itstheholyblack.vigilant_eureka.util.ArrayUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,23 +21,45 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ItemCard extends Item {
-
-    private static Item[] COLD_THINGS;
+    private static HashMap<Item, EntityCard.TYPES> TYPE_MAP = new HashMap<>();
 
     public ItemCard() {
         setRegistryName(Reference.MOD_ID, "throwing_card");
         setUnlocalizedName(Reference.MOD_ID + ".throwing_card");
         setMaxStackSize(128);
         setCreativeTab(ModItems.CREATIVE_TAB);
-        COLD_THINGS = new Item[]{
-                Items.SNOWBALL,
-                Item.getItemFromBlock(Blocks.ICE),
-                Item.getItemFromBlock(Blocks.FROSTED_ICE),
-                Item.getItemFromBlock(Blocks.PACKED_ICE)
-        };
+
+        for (Item i : new Item[]{Items.SNOWBALL, Item.getItemFromBlock(Blocks.ICE), Item.getItemFromBlock(Blocks.PACKED_ICE)}) {
+            TYPE_MAP.put(i, EntityCard.TYPES.COLD);
+        }
+
+        for (Item i : new Item[]{Items.TNT_MINECART, Items.FIREWORKS, Items.FIREWORK_CHARGE, Item.getItemFromBlock(Blocks.TNT)}) {
+            TYPE_MAP.put(i, EntityCard.TYPES.EXPLOSION);
+        }
+
+        for (Item i : new Item[]{Items.BLAZE_ROD, Items.BLAZE_POWDER, Items.FIRE_CHARGE, Items.FLINT_AND_STEEL}) {
+            TYPE_MAP.put(i, EntityCard.TYPES.HOT);
+        }
+
+        for (Item i : new Item[]{
+                Items.ENDER_EYE,
+                Items.ENDER_PEARL,
+                Items.END_CRYSTAL,
+                Item.getItemFromBlock(Blocks.END_STONE),
+                Item.getItemFromBlock(Blocks.END_BRICKS),
+                Item.getItemFromBlock(Blocks.END_ROD),
+                Item.getItemFromBlock(Blocks.ENDER_CHEST),
+                Item.getItemFromBlock(Blocks.PURPUR_BLOCK), Item.getItemFromBlock(Blocks.PURPUR_SLAB), Item.getItemFromBlock(Blocks.PURPUR_PILLAR), Item.getItemFromBlock(Blocks.PURPUR_STAIRS),
+                Items.CHORUS_FRUIT,
+                Items.CHORUS_FRUIT_POPPED,
+                Item.getItemFromBlock(Blocks.CHORUS_FLOWER), Item.getItemFromBlock(Blocks.CHORUS_PLANT)
+        }) {
+            TYPE_MAP.put(i, EntityCard.TYPES.ENDERIC);
+        }
     }
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
@@ -61,29 +82,24 @@ public class ItemCard extends Item {
             }
 
             Item otherItem = other.getItem();
-            if (otherItem.equals(Items.ENDER_EYE) || otherItem.equals(Items.ENDER_PEARL)) {
-                c.setType(EntityCard.TYPES.ENDERIC);
-            } else if (otherItem.equals(Item.getItemFromBlock(Blocks.TNT)) || otherItem.equals(Items.FIREWORKS)) {
-                c.setType(EntityCard.TYPES.EXPLOSION);
-            } else if (otherItem instanceof ItemSword) {
-                c.setType(EntityCard.TYPES.SHARP);
-            } else if (otherItem.equals(Items.FIRE_CHARGE) || otherItem.equals(Items.FLINT_AND_STEEL)) {
-                c.setType(EntityCard.TYPES.HOT);
-            } else if (ArrayUtil.contains(COLD_THINGS, otherItem)) {
-                c.setType(EntityCard.TYPES.COLD);
-            } else if (otherItem.equals(ModItems.dimKey)) {
+            c.setType(getTypeFromItem(otherItem));
+            if (otherItem.equals(ModItems.dimKey)) {
                 NBTTagCompound keyComp = NBTUtil.getTagCompoundSafe(other);
                 NBTTagCompound cardComp = c.getEntityData();
-                c.setType(EntityCard.TYPES.DIMENSIONAL);
                 cardComp.setInteger("p_x", keyComp.getInteger("x"));
                 cardComp.setInteger("p_y", keyComp.getInteger("y"));
                 cardComp.setInteger("p_z", keyComp.getInteger("z"));
                 cardComp.setInteger("dim", keyComp.getInteger("dim"));
+            } else if (otherItem instanceof ItemSword) {
+                c.setType(EntityCard.TYPES.SHARP);
             }
-
             return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
+    }
+
+    private static EntityCard.TYPES getTypeFromItem(Item item) {
+        return TYPE_MAP.get(item) == null ? EntityCard.TYPES.BLAND : TYPE_MAP.get(item);
     }
 
     @SideOnly(Side.CLIENT)
