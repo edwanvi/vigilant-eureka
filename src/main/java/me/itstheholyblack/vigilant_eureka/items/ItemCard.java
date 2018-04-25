@@ -5,6 +5,8 @@ import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.entity.EntityCard;
 import me.itstheholyblack.vigilant_eureka.util.ArrayUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -20,6 +22,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class ItemCard extends Item {
 
     private static Item[] COLD_THINGS;
@@ -27,6 +31,7 @@ public class ItemCard extends Item {
     public ItemCard() {
         setRegistryName(Reference.MOD_ID, "throwing_card");
         setUnlocalizedName(Reference.MOD_ID + ".throwing_card");
+        setMaxStackSize(128);
         setCreativeTab(ModItems.CREATIVE_TAB);
         COLD_THINGS = new Item[]{
                 Items.SNOWBALL,
@@ -84,5 +89,11 @@ public class ItemCard extends Item {
     @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(I18n.format("mouseovertext.throwing_card"));
     }
 }
