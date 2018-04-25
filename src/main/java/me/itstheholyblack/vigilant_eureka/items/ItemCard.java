@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.entity.EntityCard;
 import me.itstheholyblack.vigilant_eureka.util.ArrayUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -10,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -40,10 +42,10 @@ public class ItemCard extends Item {
             itemstack.shrink(1);
         }
         if (!worldIn.isRemote) {
-            System.out.println("spawning card");
             EntityCard c = new EntityCard(worldIn, playerIn, playerIn.getLook(1).x, playerIn.getLook(1).y, playerIn.getLook(1).z);
             c.setType(EntityCard.TYPES.BLAND);
             c.posY += playerIn.getEyeHeight();
+            c.setPositionAndRotationDirect(c.posX, c.posY, c.posZ, playerIn.cameraYaw, playerIn.cameraPitch, 0, false);
             worldIn.spawnEntity(c);
 
             ItemStack other;
@@ -64,6 +66,14 @@ public class ItemCard extends Item {
                 c.setType(EntityCard.TYPES.HOT);
             } else if (ArrayUtil.contains(COLD_THINGS, otherItem)) {
                 c.setType(EntityCard.TYPES.COLD);
+            } else if (otherItem.equals(ModItems.dimKey)) {
+                NBTTagCompound keyComp = NBTUtil.getTagCompoundSafe(other);
+                NBTTagCompound cardComp = c.getEntityData();
+                c.setType(EntityCard.TYPES.DIMENSIONAL);
+                cardComp.setInteger("p_x", keyComp.getInteger("x"));
+                cardComp.setInteger("p_y", keyComp.getInteger("y"));
+                cardComp.setInteger("p_z", keyComp.getInteger("z"));
+                cardComp.setInteger("dim", keyComp.getInteger("dim"));
             }
 
             return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);

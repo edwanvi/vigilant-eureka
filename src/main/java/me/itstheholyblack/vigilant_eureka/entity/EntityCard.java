@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.entity;
 
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
+import me.itstheholyblack.vigilant_eureka.util.FullPosition;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -120,6 +121,19 @@ public class EntityCard extends EntityThrowable {
                     this.world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
                 }
                 break;
+            case DIMENSIONAL:
+                NBTTagCompound nbt = this.getEntityData();
+                FullPosition destination = new FullPosition(nbt.getInteger("p_x"), nbt.getInteger("p_y"), nbt.getInteger("p_z"), nbt.getInteger("dim"));
+                if (!this.world.isRemote && r.entityHit != null) {
+                    if (r.entityHit.dimension != destination.getDimension()) {
+                        r.entityHit.setPosition(destination.getX(), destination.getY(), destination.getZ());
+                        r.entityHit.changeDimension(destination.getDimension());
+                        r.entityHit.setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
+                    } else {
+                        r.entityHit.setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
+                    }
+                }
+                break;
             default:
                 if (!this.world.isRemote) {
                     EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(ModItems.itemCard, 1));
@@ -151,6 +165,6 @@ public class EntityCard extends EntityThrowable {
     }
 
     public enum TYPES {
-        BLAND, SHARP, COLD, HOT, EXPLOSION, ENDERIC
+        BLAND, SHARP, COLD, HOT, EXPLOSION, ENDERIC, DIMENSIONAL
     }
 }
