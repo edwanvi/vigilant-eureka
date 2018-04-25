@@ -118,5 +118,4 @@ public class RayTraceHelper {
         }
         return blockHit;
     }
-
 }

@@ -5,6 +5,7 @@ import me.itstheholyblack.vigilant_eureka.blocks.*;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
 import me.itstheholyblack.vigilant_eureka.core.EventHandler;
+import me.itstheholyblack.vigilant_eureka.entity.ModEntities;
 import me.itstheholyblack.vigilant_eureka.items.*;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
@@ -36,6 +37,7 @@ public class CommonProxy {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         FMLLog.log.info("Registering Vigilant Eureka networking.");
         PacketHandler.registerMessages(Reference.MOD_ID);
+        ModEntities.init();
     }
 
     public void init(FMLInitializationEvent e) {
@@ -74,6 +76,7 @@ public class CommonProxy {
         event.getRegistry().register(new ItemLeyKey());
         event.getRegistry().register(new ItemLeyRune());
         event.getRegistry().register(new DebugStick());
+        event.getRegistry().register(new ItemCard());
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 }
