@@ -87,17 +87,20 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
             } else {
                 return;
             }
-            if (t.getDestination().getY() > 0 && entityIn instanceof EntityPlayer) {
-                // NBTTagCompound compound = t.getTileData();
-                FullPosition destination = t.getDestination();
+            FullPosition destination = t.getDestination();
+            if (!t.getDestination().equals(BlockPos.ORIGIN)) {
                 if (entityIn.dimension != destination.getDimension()) {
-                    CustomTeleporter.teleportToDimension((EntityPlayer) entityIn, destination.getDimension(),
-                            destination.getX(), destination.getY(), destination.getZ());
+                    if (entityIn instanceof EntityPlayer) {
+                        CustomTeleporter.teleportToDimension((EntityPlayer) entityIn, destination.getDimension(),
+                                destination.getX(), destination.getY(), destination.getZ());
+                    } else {
+                        entityIn.setPosition(destination.getX(), destination.getY(), destination.getZ());
+                        entityIn.changeDimension(destination.getDimension());
+                        entityIn.setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
+                    }
                 } else {
                     entityIn.setPositionAndUpdate(destination.getX(), destination.getY(), destination.getZ());
                 }
-            } else {
-                System.out.println(t.getDestination().getY());
             }
         }
     }
@@ -105,6 +108,11 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
     @Override
     public boolean isNormalCube(IBlockState state, IBlockAccess access, BlockPos pos) {
         return false;
+    }
+
+    @Override
+    public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
+        return true;
     }
 
     @Override
@@ -119,6 +127,11 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
 
     @Override
     public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
