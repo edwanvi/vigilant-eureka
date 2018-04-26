@@ -5,15 +5,13 @@ import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class EntitySuspendedBlock extends EntityFallingBlock {
+public class EntitySuspendedIce extends EntityFallingBlock {
 
-    private IBlockState fallTile;
-
-    public EntitySuspendedBlock(World worldIn) {
+    public EntitySuspendedIce(World worldIn) {
         super(worldIn, 0, 0, 0, Blocks.FROSTED_ICE.getDefaultState());
     }
 
-    public EntitySuspendedBlock(World worldIn, double x, double y, double z, IBlockState fallingBlockState) {
+    public EntitySuspendedIce(World worldIn, double x, double y, double z, IBlockState fallingBlockState) {
         super(worldIn, x, y, z, fallingBlockState);
     }
 

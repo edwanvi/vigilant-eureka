@@ -138,7 +138,7 @@ public class EntityCard extends EntityThrowable {
                             for (int j = -1; j <= 1; ++j) {
                                 for (int d = -1; d <= 1; ++d) {
                                     pos.add(i, j, d);
-                                    EntitySuspendedBlock efb = new EntitySuspendedBlock(this.world, pos.getX(), pos.getY(), pos.getZ(), Blocks.FROSTED_ICE.getDefaultState());
+                                    EntitySuspendedIce efb = new EntitySuspendedIce(this.world, pos.getX(), pos.getY(), pos.getZ(), Blocks.FROSTED_ICE.getDefaultState());
                                     efb.motionX += ((double) i) / ThreadLocalRandom.current().nextDouble(1, 2.5);
                                     efb.motionY += ((double) j) / ThreadLocalRandom.current().nextDouble(1, 2.5);
                                     efb.motionZ += ((double) d) / ThreadLocalRandom.current().nextDouble(1, 2.5);

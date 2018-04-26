@@ -22,7 +22,7 @@ public class ModEntities {
                 1,
                 true
         );
-        EntityRegistry.registerModEntity(new ResourceLocation("suspended_block"), EntitySuspendedBlock.class, Reference.MOD_ID + ":suspended_block", id++, Eureka.instance, 64, 1, true);
+        EntityRegistry.registerModEntity(new ResourceLocation("suspended_ice"), EntitySuspendedIce.class, Reference.MOD_ID + ":suspended_ice", id++, Eureka.instance, 64, 1, true);
     }
 
     @SideOnly(Side.CLIENT)
