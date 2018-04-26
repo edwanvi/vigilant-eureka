@@ -133,21 +133,12 @@ public class EntityCard extends EntityThrowable {
                     } else if (state.getBlock().equals(Blocks.WATER)) {
                         this.world.setBlockState(this.getPosition(), Blocks.ICE.getDefaultState());
                     } else {
-                        IBlockState[] states = new IBlockState[]{
-                                Blocks.ICE.getDefaultState(),
-                                Blocks.SNOW.getDefaultState(),
-                                Blocks.PACKED_ICE.getDefaultState(),
-                                Blocks.FROSTED_ICE.getDefaultState()
-                        };
                         BlockPos pos = new BlockPos(r.hitVec.addVector(0, 1, 0));
                         for (int i = -1; i <= 1; ++i) {
                             for (int j = -1; j <= 1; ++j) {
                                 for (int d = -1; d <= 1; ++d) {
                                     pos.add(i, j, d);
-
-                                    int index = ThreadLocalRandom.current().nextInt(0, states.length);
-                                    IBlockState cold_thing = states[index];
-                                    EntityFallingBlock efb = new EntitySuspendedBlock(this.world, pos.getX(), pos.getY(), pos.getZ(), cold_thing);
+                                    EntitySuspendedBlock efb = new EntitySuspendedBlock(this.world, pos.getX(), pos.getY(), pos.getZ(), Blocks.FROSTED_ICE.getDefaultState());
                                     efb.motionX += ((double) i) / ThreadLocalRandom.current().nextDouble(1, 2.5);
                                     efb.motionY += ((double) j) / ThreadLocalRandom.current().nextDouble(1, 2.5);
                                     efb.motionZ += ((double) d) / ThreadLocalRandom.current().nextDouble(1, 2.5);
@@ -159,6 +150,15 @@ public class EntityCard extends EntityThrowable {
                             }
                         }
                     }
+                } else if (!this.world.isRemote && r.typeOfHit.equals(RayTraceResult.Type.ENTITY)) {
+                    // entity hit
+                    BlockPos pos = r.entityHit.getPosition();
+                    EntityFallingBlock efb = new EntityFallingBlock(this.world, pos.getX(), pos.getY(), pos.getZ(), Blocks.FROSTED_ICE.getDefaultState());
+                    efb.motionY += 0.125;
+                    efb.fallTime = 1;
+                    efb.shouldDropItem = false;
+
+                    this.world.spawnEntity(efb);
                 }
                 break;
             case DIMENSIONAL:
