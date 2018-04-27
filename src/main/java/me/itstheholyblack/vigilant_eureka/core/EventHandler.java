@@ -129,7 +129,7 @@ public class EventHandler {
             ItemStack chestpiece = dismounting.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if (chestpiece.getItem().equals(Items.ELYTRA) && ItemElytra.isUsable(chestpiece)) {
                 if (!event.getWorldObj().isRemote && (minecart.motionX != 0 && minecart.motionY != 0 && minecart.motionZ != 0)) {
-                    dismounting.addVelocity(minecart.motionX, minecart.motionY, minecart.motionZ);
+                    dismounting.addVelocity(minecart.motionX, Math.abs(minecart.motionY), minecart.motionZ);
                     EntityPlayerMP player = (EntityPlayerMP) dismounting;
                     player.setElytraFlying();
                 }
