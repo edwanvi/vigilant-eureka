@@ -5,8 +5,13 @@ import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -14,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -112,6 +118,22 @@ public class EventHandler {
     public void livingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity().getEntityData().getBoolean("floated")) {
             event.getEntity().addVelocity(0, float_strength, 0);
+        }
+    }
+
+    @SubscribeEvent
+    public void minecartTakeoff(EntityMountEvent event) {
+        if (event.isDismounting() && event.getEntityBeingMounted() instanceof EntityMinecart && event.getEntityMounting() instanceof EntityPlayer) {
+            EntityMinecart minecart = (EntityMinecart) event.getEntityBeingMounted();
+            EntityPlayer dismounting = (EntityPlayer) event.getEntityMounting();
+            ItemStack chestpiece = dismounting.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+            if (chestpiece.getItem().equals(Items.ELYTRA) && ItemElytra.isUsable(chestpiece)) {
+                if (!event.getWorldObj().isRemote && (minecart.motionX != 0 && minecart.motionY != 0 && minecart.motionZ != 0)) {
+                    dismounting.addVelocity(minecart.motionX, minecart.motionY, minecart.motionZ);
+                    EntityPlayerMP player = (EntityPlayerMP) dismounting;
+                    player.setElytraFlying();
+                }
+            }
         }
     }
 
