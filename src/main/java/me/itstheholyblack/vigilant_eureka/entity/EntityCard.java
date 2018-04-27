@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.entity;
 
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
+import me.itstheholyblack.vigilant_eureka.util.ArrayUtil;
 import me.itstheholyblack.vigilant_eureka.util.FullPosition;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -126,6 +127,12 @@ public class EntityCard extends EntityThrowable {
                 }
                 break;
             case COLD:
+                IBlockState cold_things[] = new IBlockState[]{
+                        Blocks.FROSTED_ICE.getDefaultState(),
+                        Blocks.ICE.getDefaultState(),
+                        Blocks.SNOW.getDefaultState(),
+                        Blocks.PACKED_ICE.getDefaultState()
+                };
                 if (r.typeOfHit.equals(RayTraceResult.Type.BLOCK) && !this.world.isRemote) {
                     IBlockState state = this.world.getBlockState(this.getPosition());
                     if (state.getBlock().equals(Blocks.ICE)) {
@@ -138,7 +145,9 @@ public class EntityCard extends EntityThrowable {
                             for (int j = -1; j <= 1; ++j) {
                                 for (int d = -1; d <= 1; ++d) {
                                     pos.add(i, j, d);
-                                    EntitySuspendedIce efb = new EntitySuspendedIce(this.world, pos.getX(), pos.getY(), pos.getZ(), Blocks.FROSTED_ICE.getDefaultState());
+                                    IBlockState s = ArrayUtil.randomFromArr(cold_things);
+                                    // System.out.println(s);
+                                    EntitySuspendedIce efb = new EntitySuspendedIce(this.world, pos.getX(), pos.getY(), pos.getZ(), s);
                                     efb.motionX += ((double) i) / ThreadLocalRandom.current().nextDouble(1, 2.5);
                                     efb.motionY += ((double) j) / ThreadLocalRandom.current().nextDouble(1, 2.5);
                                     efb.motionZ += ((double) d) / ThreadLocalRandom.current().nextDouble(1, 2.5);
@@ -153,9 +162,10 @@ public class EntityCard extends EntityThrowable {
                 } else if (!this.world.isRemote && r.typeOfHit.equals(RayTraceResult.Type.ENTITY)) {
                     // entity hit
                     BlockPos pos = r.entityHit.getPosition();
-                    EntityFallingBlock efb = new EntityFallingBlock(this.world, pos.getX(), pos.getY(), pos.getZ(), Blocks.FROSTED_ICE.getDefaultState());
-                    efb.motionY += 0.125;
+                    EntityFallingBlock efb = new EntityFallingBlock(this.world, pos.getX(), pos.getY() + 1, pos.getZ(), ArrayUtil.randomFromArr(cold_things));
+                    efb.motionY += 0.75;
                     efb.fallTime = 1;
+                    efb.setHurtEntities(true);
                     efb.shouldDropItem = false;
 
                     this.world.spawnEntity(efb);
