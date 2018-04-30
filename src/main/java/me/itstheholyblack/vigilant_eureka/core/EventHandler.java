@@ -16,12 +16,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -128,11 +130,27 @@ public class EventHandler {
             EntityPlayer dismounting = (EntityPlayer) event.getEntityMounting();
             ItemStack chestpiece = dismounting.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if (chestpiece.getItem().equals(Items.ELYTRA) && ItemElytra.isUsable(chestpiece)) {
-                if (!event.getWorldObj().isRemote && (minecart.motionX != 0 && minecart.motionY != 0 && minecart.motionZ != 0)) {
-                    dismounting.addVelocity(minecart.motionX, Math.abs(minecart.motionY), minecart.motionZ);
+                if (!event.getWorldObj().isRemote && (Math.abs(minecart.motionX) + Math.abs(minecart.motionY) + Math.abs(minecart.motionZ) != 0)) {
+                    dismounting.addVelocity(minecart.motionX, Math.abs(minecart.motionY) + 5, minecart.motionZ);
                     EntityPlayerMP player = (EntityPlayerMP) dismounting;
                     player.setElytraFlying();
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void useItem(PlayerInteractEvent event) {
+        if (!event.getWorld().isRemote) {
+            EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+            if (event.getItemStack().getItem().equals(Items.FIREWORKS) && player.isRiding() && player.getRidingEntity() instanceof EntityMinecart) {
+                if (!player.capabilities.isCreativeMode) {
+                    event.getItemStack().shrink(1);
+                }
+                Vec3d v = player.getLookVec();
+                player.getRidingEntity().addVelocity(v.x * 500, v.y * 500, v.z * 500);
+                event.setCancellationResult(EnumActionResult.SUCCESS);
+                event.setCanceled(true);
             }
         }
     }
