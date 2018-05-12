@@ -19,6 +19,7 @@ mouseovertext.throwing_card=The card seems to hum with energy. Maybe you should 
 itemGroup.vigilantEureka=Vigilant Eureka
 
 vigilant_eureka.keybind.warp_key=Warp with Warp Boots
+vigilant_eureka.keybind.time_key=Open the Eye
 vigilant_eureka.gui.keybinds=Vigilant Eureka
 
 message.ley_link_good=It worked!
