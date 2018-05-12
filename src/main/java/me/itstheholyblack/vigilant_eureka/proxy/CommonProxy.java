@@ -8,6 +8,7 @@ import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.entity.ModEntities;
 import me.itstheholyblack.vigilant_eureka.items.*;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
+import me.itstheholyblack.vigilant_eureka.items.armor.ItemTime;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
 import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
 import me.itstheholyblack.vigilant_eureka.world.WorldGenBismuth;
@@ -72,6 +73,7 @@ public class CommonProxy {
         event.getRegistry().register(new DimKey());
         event.getRegistry().register(new WarpBoots());
         event.getRegistry().register(new InvisCap());
+        event.getRegistry().register(new ItemTime());
         event.getRegistry().register(new ItemBismite());
         event.getRegistry().register(new ItemLeyKey());
         event.getRegistry().register(new ItemLeyRune());
