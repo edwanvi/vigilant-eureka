@@ -1,9 +1,11 @@
 package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumActionResult;
@@ -39,18 +41,23 @@ public class DebugStick extends Item {
                 IChunkProvider provider = worldIn.getChunkProvider();
                 IChunkGenerator generator = ((ChunkProviderServer) provider).chunkGenerator;
                 Chunk newChunk = generator.generateChunk(oldChunk.x, oldChunk.z);
+                //oldChunk.setTerrainPopulated(false);
+                //oldChunk.populate(provider, generator);
 
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
                         for (int y = 0; y < worldIn.getHeight(); y++) {
                             IBlockState state = newChunk.getBlockState(x, y, z);
-                            worldIn.setBlockState(new BlockPos(x + oldChunk.x * 16, y, z + oldChunk.z * 16), state, 3);
+                            Block oldBlock = oldChunk.getBlockState(x, y, z).getBlock();
+                            if (!oldBlock.equals(Blocks.END_PORTAL) && !oldBlock.equals(Blocks.END_PORTAL_FRAME) && !oldBlock.equals(Blocks.END_GATEWAY)) {
+                                worldIn.setBlockState(new BlockPos(x + oldChunk.x * 16, y, z + oldChunk.z * 16), state, 3);
+                            }
                         }
                     }
                 }
-
                 oldChunk.setTerrainPopulated(false);
-                generator.populate(oldChunk.x, oldChunk.z);
+                oldChunk.populate(provider, generator);
+                System.out.println("Finished that up nice!");
                 oldChunk.markDirty();
                 oldChunk.resetRelightChecks();
             } catch (Exception e) {

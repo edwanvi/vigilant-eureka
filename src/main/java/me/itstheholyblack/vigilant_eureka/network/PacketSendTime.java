@@ -60,10 +60,12 @@ public class PacketSendTime implements IMessage {
             if (BaublesApi.isBaubleEquipped(playerEntity, ModItems.itemTime) != -1 && !world.isRemote && world instanceof WorldServer) {
                 // ngl i stole this from ICBM
                 try {
-                    Chunk oldChunk = world.getChunkFromChunkCoords(pos.getX() >> 4, pos.getZ() >> 4);
+                    Chunk oldChunk = world.getChunkFromBlockCoords(pos);
                     IChunkProvider provider = world.getChunkProvider();
                     IChunkGenerator generator = ((ChunkProviderServer) provider).chunkGenerator;
                     Chunk newChunk = generator.generateChunk(oldChunk.x, oldChunk.z);
+                    oldChunk.setTerrainPopulated(false);
+                    generator.populate(oldChunk.x, oldChunk.z);
 
                     for (int x = 0; x < 16; x++) {
                         for (int z = 0; z < 16; z++) {
@@ -76,9 +78,7 @@ public class PacketSendTime implements IMessage {
                             }
                         }
                     }
-
-                    oldChunk.setTerrainPopulated(false);
-                    generator.populate(oldChunk.x, oldChunk.z);
+                    System.out.println("Finished that up nice!");
                     oldChunk.markDirty();
                     oldChunk.resetRelightChecks();
                 } catch (Exception e) {
