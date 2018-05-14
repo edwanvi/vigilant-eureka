@@ -2,8 +2,8 @@ package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
-import me.itstheholyblack.vigilant_eureka.items.baubles.ItemTime;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
+import me.itstheholyblack.vigilant_eureka.items.baubles.ItemTime;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
