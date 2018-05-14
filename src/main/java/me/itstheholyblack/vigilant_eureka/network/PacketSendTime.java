@@ -17,23 +17,27 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketSendTime implements IMessage {
 
-    private BlockPos blockPos;
+    private BlockPos look;
+    private BlockPos stand;
 
     @Override
     public void fromBytes(ByteBuf buf) {
         // Encoding the position as a long is more efficient
-        blockPos = BlockPos.fromLong(buf.readLong());
+        look = BlockPos.fromLong(buf.readLong());
+        stand = BlockPos.fromLong(buf.readLong());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         // Encoding the position as a long is more efficient
-        buf.writeLong(blockPos.toLong());
+        buf.writeLong(look.toLong());
+        buf.writeLong(stand.toLong());
     }
 
     public PacketSendTime() {
         RayTraceResult result = Minecraft.getMinecraft().objectMouseOver;
-        blockPos = result.getBlockPos();
+        look = result.getBlockPos();
+        stand = Minecraft.getMinecraft().player.getPosition();
     }
 
     public static class Handler implements IMessageHandler<PacketSendTime, IMessage> {
@@ -51,9 +55,9 @@ public class PacketSendTime implements IMessage {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
-            BlockPos pos = message.blockPos;
+            BlockPos pos = message.look;
             if (BaublesApi.isBaubleEquipped(playerEntity, ModItems.itemTime) != -1 && !world.isRemote && world instanceof WorldServer) {
-                ChunkRebuilder.rebuildChunk(world, pos);
+                ChunkRebuilder.rebuildChunk(world, pos, message.stand);
             }
         }
     }
