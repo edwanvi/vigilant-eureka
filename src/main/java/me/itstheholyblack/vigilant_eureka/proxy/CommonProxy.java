@@ -8,7 +8,7 @@ import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.entity.ModEntities;
 import me.itstheholyblack.vigilant_eureka.items.*;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
-import me.itstheholyblack.vigilant_eureka.items.armor.ItemTime;
+import me.itstheholyblack.vigilant_eureka.items.baubles.ItemTime;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
 import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
 import me.itstheholyblack.vigilant_eureka.world.WorldGenBismuth;

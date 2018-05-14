@@ -1,4 +1,4 @@
-package me.itstheholyblack.vigilant_eureka.items.armor;
+package me.itstheholyblack.vigilant_eureka.items.baubles;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
@@ -9,12 +9,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class ItemTime extends Item implements IBauble, IRenderBauble {
     public ItemTime() {
@@ -47,6 +52,12 @@ public class ItemTime extends Item implements IBauble, IRenderBauble {
             Minecraft.getMinecraft().getRenderItem().renderItem(new ItemStack(this), ItemCameraTransforms.TransformType.NONE);
             GlStateManager.popMatrix();
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(I18n.format("mouseovertext.time"));
     }
 
     private static void scale(float f) {
