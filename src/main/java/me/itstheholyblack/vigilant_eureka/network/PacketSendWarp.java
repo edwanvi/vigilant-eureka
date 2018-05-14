@@ -56,9 +56,7 @@ public class PacketSendWarp implements IMessage {
                 } catch (NullPointerException e) {
                     look = playerEntity.getPosition();
                 }
-                if (playerEntity.getCooldownTracker().hasCooldown(ModItems.warpBoots)) {
-                    return;
-                } else {
+                if (!playerEntity.getCooldownTracker().hasCooldown(ModItems.warpBoots)) {
                     playerEntity.getCooldownTracker().setCooldown(ModItems.warpBoots, 20);
                     playerEntity.setPositionAndUpdate(look.getX(), look.getY() + 2, look.getZ());
                     PacketHandler.INSTANCE.sendToAll(new PacketEndericPoof(look.up(2)));

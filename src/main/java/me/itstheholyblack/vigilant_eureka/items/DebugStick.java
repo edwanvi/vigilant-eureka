@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.core.ChunkRebuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -36,33 +37,7 @@ public class DebugStick extends Item {
     @Override
     public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote && worldIn instanceof WorldServer) {
-            try {
-                Chunk oldChunk = worldIn.getChunkFromChunkCoords(pos.getX() >> 4, pos.getZ() >> 4);
-                IChunkProvider provider = worldIn.getChunkProvider();
-                IChunkGenerator generator = ((ChunkProviderServer) provider).chunkGenerator;
-                Chunk newChunk = generator.generateChunk(oldChunk.x, oldChunk.z);
-                //oldChunk.setTerrainPopulated(false);
-                //oldChunk.populate(provider, generator);
-
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        for (int y = 0; y < worldIn.getHeight(); y++) {
-                            IBlockState state = newChunk.getBlockState(x, y, z);
-                            Block oldBlock = oldChunk.getBlockState(x, y, z).getBlock();
-                            if (!oldBlock.equals(Blocks.END_PORTAL) && !oldBlock.equals(Blocks.END_PORTAL_FRAME) && !oldBlock.equals(Blocks.END_GATEWAY)) {
-                                worldIn.setBlockState(new BlockPos(x + oldChunk.x * 16, y, z + oldChunk.z * 16), state, 3);
-                            }
-                        }
-                    }
-                }
-                oldChunk.setTerrainPopulated(false);
-                oldChunk.populate(provider, generator);
-                System.out.println("Finished that up nice!");
-                oldChunk.markDirty();
-                oldChunk.resetRelightChecks();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            ChunkRebuilder.rebuildChunk(worldIn, pos);
         }
         return EnumActionResult.SUCCESS;
     }
