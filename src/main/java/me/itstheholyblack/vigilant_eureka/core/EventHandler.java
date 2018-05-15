@@ -17,9 +17,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -153,6 +160,29 @@ public class EventHandler {
                 event.setCanceled(true);
             }
         }
+    }
+
+    // loot tables
+    @SubscribeEvent
+    public void lootLoad(LootTableLoadEvent evt) {
+        String prefix = "minecraft:chests/";
+        String name = evt.getName().toString();
+
+        if (name.startsWith(prefix)) {
+            String file = name.substring(name.indexOf(prefix) + prefix.length());
+            if (file.equals("stronghold_library") || file.equals("simple_dungeon")) {
+                System.out.println("Injecting...");
+                evt.getTable().addPool(getInjectPool("simple_dungeon"));
+            }
+        }
+    }
+
+    private LootPool getInjectPool(String entryName) {
+        return new LootPool(new LootEntry[]{getInjectEntry(entryName, 1)}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "eureka_inject_pool");
+    }
+
+    private LootEntryTable getInjectEntry(String name, int weight) {
+        return new LootEntryTable(new ResourceLocation(Reference.MOD_ID, "inject/" + name), weight, 0, new LootCondition[0], "eureka_inject_entry");
     }
 
     private static void removeLeyNBT(EntityLivingBase e) {
