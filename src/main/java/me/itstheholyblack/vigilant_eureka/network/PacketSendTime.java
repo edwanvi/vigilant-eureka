@@ -8,6 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -56,8 +59,11 @@ public class PacketSendTime implements IMessage {
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
             BlockPos pos = message.look;
-            if (BaublesApi.isBaubleEquipped(playerEntity, ModItems.itemTime) != -1 && !world.isRemote && world instanceof WorldServer) {
+            if (!playerEntity.getCooldownTracker().hasCooldown(ModItems.itemTime) && BaublesApi.isBaubleEquipped(playerEntity, ModItems.itemTime) != -1 && !world.isRemote && world instanceof WorldServer) {
+                playerEntity.getCooldownTracker().setCooldown(ModItems.itemTime, 100);
                 ChunkRebuilder.rebuildChunk(world, pos, message.stand);
+            } else if (playerEntity.getCooldownTracker().hasCooldown(ModItems.itemTime)) {
+                playerEntity.sendStatusMessage(new TextComponentTranslation("message.eye_already_open"), true);
             }
         }
     }
