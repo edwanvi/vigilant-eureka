@@ -12,17 +12,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModEntities {
     public static void init() {
         int id = 1;
-        EntityRegistry.registerModEntity(
-                new ResourceLocation("thrown_card"),
-                EntityCard.class,
-                Reference.MOD_ID + ":thrown_card",
-                id++,
-                Eureka.instance,
-                64,
-                1,
-                true
-        );
-        EntityRegistry.registerModEntity(new ResourceLocation("suspended_ice"), EntitySuspendedIce.class, Reference.MOD_ID + ":suspended_ice", id++, Eureka.instance, 64, 1, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(Reference.MOD_ID, "thrown_card"), EntityCard.class, Reference.MOD_ID + ":thrown_card", id++, Eureka.instance, 64, 1, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(Reference.MOD_ID, "suspended_ice"), EntitySuspendedIce.class, Reference.MOD_ID + ":suspended_ice", id++, Eureka.instance, 64, 1, true);
     }
 
     @SideOnly(Side.CLIENT)
