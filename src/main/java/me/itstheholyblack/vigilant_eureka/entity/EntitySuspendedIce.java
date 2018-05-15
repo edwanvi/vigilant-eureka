@@ -34,14 +34,18 @@ public class EntitySuspendedIce extends EntityFallingBlock implements IEntityAdd
     @Override
     public void writeSpawnData(ByteBuf buffer) {
         int state = 0;
-        if (this.fallTile.equals(Blocks.ICE.getDefaultState())) {
-            buffer.writeInt(state);
-            return;
-        } else if (this.fallTile.equals(Blocks.FROSTED_ICE.getDefaultState())) {
-            state = 1;
-        } else if (this.fallTile.equals(Blocks.PACKED_ICE)) {
-            state = 2;
-        } else if (this.fallTile.equals(Blocks.SNOW.getDefaultState())) {
+        try {
+            if (this.fallTile.equals(Blocks.ICE.getDefaultState())) {
+                buffer.writeInt(state);
+                return;
+            } else if (this.fallTile.equals(Blocks.FROSTED_ICE.getDefaultState())) {
+                state = 1;
+            } else if (this.fallTile.equals(Blocks.PACKED_ICE)) {
+                state = 2;
+            } else if (this.fallTile.equals(Blocks.SNOW.getDefaultState())) {
+                state = 3;
+            }
+        } catch (NullPointerException e) {
             state = 3;
         }
         buffer.writeInt(state);
