@@ -64,14 +64,20 @@ public class ItemTime extends Item implements IBauble, IRenderBauble {
     @SideOnly(Side.CLIENT)
     public void onPlayerBaubleRender(ItemStack itemStack, EntityPlayer entityPlayer, RenderType renderType, float v) {
         if (renderType.equals(RenderType.BODY)) {
-            Helper.rotateIfSneaking(entityPlayer);
+            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             Helper.translateToChest();
             Helper.defaultTransforms();
             scale(1.25F);
-            GlStateManager.translate(0F, -0.2F, 0F);
-            GlStateManager.pushMatrix();
-            Minecraft.getMinecraft().getRenderItem().renderItem(new ItemStack(this), ItemCameraTransforms.TransformType.NONE);
-            GlStateManager.popMatrix();
+            boolean armor = !entityPlayer.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty();
+            GlStateManager.translate(-0.5F, -0.7F, armor ? 0.1F : 0F);
+
+            boolean open = entityPlayer.getCooldownTracker().hasCooldown(this);
+            TextureAtlasSprite gemIcon = open ? Icons.INSTANCE.time_open : Icons.INSTANCE.time_closed;
+            float f = gemIcon.getMinU();
+            float f1 = gemIcon.getMaxU();
+            float f2 = gemIcon.getMinV();
+            float f3 = gemIcon.getMaxV();
+            RenderHelp.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, gemIcon.getIconWidth(), gemIcon.getIconHeight(), 1F / 32F);
         }
     }
 
