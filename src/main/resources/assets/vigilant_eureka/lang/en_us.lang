@@ -31,5 +31,6 @@ message.ley_link_twoway=Two way links aren't acceptable.
 
 message.ley_solve_good=The links pulse and strengthen.
 message.ley_solve_incomplete=The line isn't complete!
-
 message.enter_ley=Something feels different.
+
+message.eye_already_open=The eye is stubbornly open - perhaps you must wait for it to close?
