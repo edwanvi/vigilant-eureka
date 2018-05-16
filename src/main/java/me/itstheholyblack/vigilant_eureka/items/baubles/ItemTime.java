@@ -65,6 +65,7 @@ public class ItemTime extends Item implements IBauble, IRenderBauble {
     public void onPlayerBaubleRender(ItemStack itemStack, EntityPlayer entityPlayer, RenderType renderType, float v) {
         if (renderType.equals(RenderType.BODY)) {
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            Helper.rotateIfSneaking(entityPlayer);
             Helper.translateToChest();
             Helper.defaultTransforms();
             scale(1.25F);
