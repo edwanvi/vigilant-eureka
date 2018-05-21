@@ -1,5 +1,6 @@
 package me.itstheholyblack.vigilant_eureka.core;
 
+import me.itstheholyblack.vigilant_eureka.util.ArrayUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -13,6 +14,16 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.IChunkGenerator;
 
 public class ChunkRebuilder {
+
+    private static final Block[] blacklist = new Block[]{
+            Blocks.END_GATEWAY,
+            Blocks.END_PORTAL,
+            Blocks.END_PORTAL_FRAME,
+            Blocks.BEDROCK,
+            Blocks.BARRIER,
+            Blocks.COMMAND_BLOCK, Blocks.CHAIN_COMMAND_BLOCK, Blocks.REPEATING_COMMAND_BLOCK
+    };
+
     public static void rebuildChunk(World world, BlockPos pos, BlockPos stand) {
         // ngl i stole this from ICBM
         try {
@@ -29,10 +40,10 @@ public class ChunkRebuilder {
                         IBlockState state = newChunk.getBlockState(x, y, z);
                         Block oldBlock = oldChunk.getBlockState(x, y, z).getBlock();
                         BlockPos working = new BlockPos(x + oldChunk.x * 16, y, z + oldChunk.z * 16);
-                        if (!oldBlock.equals(Blocks.END_PORTAL) && !oldBlock.equals(Blocks.END_PORTAL_FRAME) && !oldBlock.equals(Blocks.END_GATEWAY)) {
+                        if (!ArrayUtil.contains(blacklist, oldBlock)) {
                             world.setBlockState(working, state, 3);
-                            if (!oldBlock.equals(Blocks.AIR) && world.canSeeSky(working)) {
-                                ((WorldServer) world).spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, true, working.getX(), working.getY(), working.getZ(), 10, 0.5, 1, 0.5, 0.005D);
+                            if (world.canSeeSky(working) && !oldBlock.equals(state.getBlock())) {
+                                ((WorldServer) world).spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, true, working.getX(), working.getY(), working.getZ(), 10, 0.5, 1, 0.5, 0.05D);
                             }
                         }
                     }
@@ -40,9 +51,9 @@ public class ChunkRebuilder {
             }
             oldChunk.setTerrainPopulated(false);
             oldChunk.populate(provider, generator);
-            System.out.println("Finished that up nice!");
             oldChunk.markDirty();
             oldChunk.resetRelightChecks();
+            ((WorldServer) world).spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, true, stand.getX(), stand.getY(), stand.getZ(), 1000, 0.75, 1, 0.75, 0.05D);
         } catch (Exception e) {
             e.printStackTrace();
         }
