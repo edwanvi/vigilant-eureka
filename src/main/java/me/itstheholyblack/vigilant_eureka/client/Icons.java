@@ -12,7 +12,8 @@ public class Icons {
     public TextureAtlasSprite time_open;
     public TextureAtlasSprite time_closed;
 
-    private Icons(){}
+    private Icons() {
+    }
 
     @SubscribeEvent
     public void onTextureStitch(TextureStitchEvent.Pre evt) {
