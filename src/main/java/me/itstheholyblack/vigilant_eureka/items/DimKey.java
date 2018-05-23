@@ -4,7 +4,7 @@ import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.blocks.MovingCastleDoor;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
-import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
+import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import me.itstheholyblack.vigilant_eureka.util.RayTraceHelper;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;

@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.client.renderer;
 
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
+import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;

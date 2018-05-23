@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -56,6 +57,6 @@ public class ItemLeyKey extends Item {
 
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack) {
-        return me.itstheholyblack.vigilant_eureka.core.NBTUtil.getTagCompoundSafe(stack).hasKey("tolink");
+        return NBTUtil.getTagCompoundSafe(stack).hasKey("tolink");
     }
 }
