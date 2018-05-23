@@ -34,3 +34,5 @@ message.ley_solve_incomplete=The line isn't complete!
 message.enter_ley=Something feels different.
 
 message.eye_already_open=The eye is stubbornly open - perhaps you must wait for it to close?
+
+entity.vigilant_eureka:player_body.name=Someone's body
