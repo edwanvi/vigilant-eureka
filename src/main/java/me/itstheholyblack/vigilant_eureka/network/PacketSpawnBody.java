@@ -3,6 +3,7 @@ package me.itstheholyblack.vigilant_eureka.network;
 import io.netty.buffer.ByteBuf;
 import me.itstheholyblack.vigilant_eureka.entity.EntityPlayerBody;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -52,7 +53,8 @@ public class PacketSpawnBody implements IMessage {
             e.renderYawOffset = e.rotationYaw;
 
             e.setSmallArms(message.smallArms);
-            e.setPlayer(playerEntity.getName());
+            e.setPlayerName(playerEntity.getName());
+            e.setPlayerId(EntityPlayer.getUUID(playerEntity.getGameProfile()));
 
             world.spawnEntity(e);
         }

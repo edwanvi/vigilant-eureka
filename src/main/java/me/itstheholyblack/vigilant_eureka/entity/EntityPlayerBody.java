@@ -1,76 +1,124 @@
 package me.itstheholyblack.vigilant_eureka.entity;
 
+import com.google.common.base.Optional;
+import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class EntityPlayerBody extends EntityLiving {
 
-    private static final DataParameter<String> PLAYER_NAME = EntityDataManager.createKey(EntityPlayerBody.class, DataSerializers.STRING);
+    private static final DataParameter<String> PLAYER_USERNAME = EntityDataManager.createKey(EntityPlayerBody.class, DataSerializers.STRING);
+    private static final DataParameter<Optional<UUID>> PLAYER_UUID = EntityDataManager.createKey(EntityPlayerBody.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Boolean> SMALL_ARMS = EntityDataManager.createKey(EntityPlayerBody.class, DataSerializers.BOOLEAN);
 
     public EntityPlayerBody(World worldIn) {
         super(worldIn);
-        setSize(0.6F, 0.5F);
+        setSize(1.8F, 0.5F);
         setHealth(20);
     }
 
     @Override
     public void entityInit() {
         super.entityInit();
-        dataManager.register(PLAYER_NAME, "");
+        dataManager.register(PLAYER_USERNAME, "");
         dataManager.register(SMALL_ARMS, false);
+        dataManager.register(PLAYER_UUID, Optional.absent());
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
-        compound.setString("playerName", dataManager.get(PLAYER_NAME));
+        compound.setString("playerName", dataManager.get(PLAYER_USERNAME));
+        if (dataManager.get(PLAYER_UUID).isPresent()) {
+            compound.setUniqueId("playerId", dataManager.get(PLAYER_UUID).get());
+        }
         compound.setBoolean("smallArms", dataManager.get(SMALL_ARMS));
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        setPlayer(compound.getString("playerName"));
+        setPlayerName(compound.getString("playerName"));
         setSmallArms(compound.getBoolean("smallArms"));
+        setPlayerId(compound.getUniqueId("playerId"));
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        this.limbSwingAmount = 0.0F;
+    }
+
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (player.getName().equals(this.getPlayerName())) {
+            if (!player.getHeldItem(hand).isEmpty() && player.getUniqueID().equals(this.getPlayerId())) {
+                player.sendStatusMessage(new TextComponentTranslation("message.body"), true);
+            } else if (player.getUniqueID().equals(this.getPlayerId())) {
+                this.attackEntityFrom(DamageSource.OUT_OF_WORLD, this.getHealth());
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        EntityPlayer p = this.world.getPlayerEntityByName(this.getPlayer());
-        return (p != null) ? super.attackEntityFrom(source, amount) && p.attackEntityFrom(source, amount) : super.attackEntityFrom(source, amount);
+        EntityPlayer p = this.world.getPlayerEntityByName(this.getPlayerName());
+        return (p != null && !source.equals(DamageSource.OUT_OF_WORLD)) ? super.attackEntityFrom(source, amount) && p.attackEntityFrom(source, amount) : super.attackEntityFrom(source, amount);
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        EntityPlayer p = this.world.getPlayerEntityByName(this.getPlayer());
+    public void onDeath(@Nonnull DamageSource cause) {
+        EntityPlayer p = this.world.getPlayerEntityByUUID(this.getPlayerId());
         if (p != null) {
             NBTUtil.getPlayerPersist(p).setBoolean("metaphysical_high_ground", false);
-            p.setInvisible(false);
+            if (!p.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().equals(ModItems.invisCap)) {
+                p.setInvisible(false);
+            }
+            if (!cause.equals(DamageSource.OUT_OF_WORLD)) {
+                p.attackEntityFrom(cause, p.getHealth());
+            } else {
+                System.out.println("The void calls me!");
+                p.setPositionAndUpdate(this.posX, this.posY, this.posZ);
+            }
         }
+        super.onDeath(cause);
     }
 
-    public String getPlayer() {
-        return dataManager.get(PLAYER_NAME);
+    @Nullable
+    public UUID getPlayerId() {
+        return dataManager.get(PLAYER_UUID).isPresent() ? dataManager.get(PLAYER_UUID).get() : null;
     }
 
-    public void setPlayer(String player) {
-        if (player.endsWith("s")) {
-            this.setCustomNameTag(player + "' body");
+    public void setPlayerId(UUID id) {
+        dataManager.set(PLAYER_UUID, Optional.of(id));
+    }
+
+    public String getPlayerName() {
+        return dataManager.get(PLAYER_USERNAME);
+    }
+
+    public void setPlayerName(String name) {
+        if (name.endsWith("s")) {
+            this.setCustomNameTag(name + "' body");
         } else {
-            this.setCustomNameTag(player + "'s body");
+            this.setCustomNameTag(name + "'s body");
         }
-        dataManager.set(PLAYER_NAME, player);
+        dataManager.set(PLAYER_USERNAME, name);
     }
 
     public boolean smallArms() {
