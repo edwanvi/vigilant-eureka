@@ -5,6 +5,7 @@ import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -32,5 +33,10 @@ public class InvisCap extends ItemArmor {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add(I18n.format("mouseovertext.invis_cap"));
+    }
+
+    @Override
+    public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+        player.setInvisible(true);
     }
 }

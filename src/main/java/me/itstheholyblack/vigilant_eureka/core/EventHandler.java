@@ -155,7 +155,7 @@ public class EventHandler {
                     event.getItemStack().shrink(1);
                 }
                 Vec3d v = player.getLookVec();
-                player.getRidingEntity().addVelocity(v.x * 500, v.y * 500, v.z * 500);
+                player.getRidingEntity().addVelocity(v.x * 500, v.y * 5, v.z * 500);
                 event.setCancellationResult(EnumActionResult.SUCCESS);
                 event.setCanceled(true);
             }
