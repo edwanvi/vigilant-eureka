@@ -108,7 +108,7 @@ public class EntityPlayerBody extends EntityLiving {
 
     @Override
     public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
-        EntityPlayer p = this.world.getPlayerEntityByName(this.getPlayerName());
+        EntityPlayer p = this.world.getPlayerEntityByUUID(this.getPlayerId());
         return (p != null && !source.equals(DamageSource.OUT_OF_WORLD)) ? super.attackEntityFrom(source, amount) && p.attackEntityFrom(source, amount) : super.attackEntityFrom(source, amount);
     }
 
