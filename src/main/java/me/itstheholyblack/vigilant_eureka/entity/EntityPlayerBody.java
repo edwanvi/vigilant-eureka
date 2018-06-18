@@ -123,7 +123,6 @@ public class EntityPlayerBody extends EntityLiving {
             if (!cause.equals(DamageSource.OUT_OF_WORLD)) {
                 p.attackEntityFrom(cause, p.getHealth());
             } else {
-                System.out.println("The void calls me!");
                 p.setPositionAndUpdate(this.posX, this.posY, this.posZ);
             }
         }
