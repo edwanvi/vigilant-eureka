@@ -105,18 +105,21 @@ public class EventHandler {
                 }
             }
         }
+
+        if (e instanceof EntityPlayer) {
+            NBTTagCompound playerData = me.itstheholyblack.vigilant_eureka.util.NBTUtil.getPlayerPersist((EntityPlayer) e);
+            if (playerData.getBoolean("metaphysical_high_ground")) {
+                e.setInvisible(true); // simply doing e.setInvisible(playerData.getBoolean("metaphysical_high_ground")) causes invis pots to fail
+            }
+        }
     }
 
     @SubscribeEvent
     public void armorChanged(LivingEquipmentChangeEvent event) {
         ItemStack oldStack = event.getFrom();
-        ItemStack newStack = event.getTo();
         EntityEquipmentSlot slot = event.getSlot();
         if (slot.equals(EntityEquipmentSlot.HEAD)) {
-            if (newStack.getItem().equals(ModItems.invisCap)) {
-                // switch to the invis cap
-                event.getEntityLiving().setInvisible(true);
-            } else if (oldStack.getItem().equals(ModItems.invisCap)) {
+            if (oldStack.getItem().equals(ModItems.invisCap)) {
                 // switch off cap
                 event.getEntityLiving().setInvisible(false);
             }
