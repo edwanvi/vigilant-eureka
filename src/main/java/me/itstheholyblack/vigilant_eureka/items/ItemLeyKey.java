@@ -5,9 +5,13 @@ import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -22,6 +26,14 @@ public class ItemLeyKey extends Item {
         setUnlocalizedName(Reference.MOD_ID + ".ley_key");
         setMaxStackSize(1); // category of one
         setCreativeTab(ModItems.CREATIVE_TAB);
+    }
+
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        if (playerIn.isSneaking()) {
+            NBTUtil.getTagCompoundSafe(stack).removeTag("tolink");
+        }
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     @SideOnly(Side.CLIENT)
