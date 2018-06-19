@@ -39,26 +39,20 @@ public class ItemLeyKey extends Item {
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        NBTTagCompound compound = stack.getTagCompound();
-        if (compound != null) {
-            BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(compound.getCompoundTag("tolink"));
-            int x;
-            int y;
-            int z;
-            x = p.getX();
-            y = p.getY();
-            z = p.getZ();
-            // (0, 0, 0) isn't reachable without breaking bedrock
-            if (y == 0) {
-                tooltip.add(I18n.format("mouseovertext.ley_key"));
-            } else {
-                String fulltip = I18n.format("mouseovertext.ley_key") + "\nX: " + Integer.toString(x) + "\nY: "
-                        + Integer.toString(y) + "\nZ: " + Integer.toString(z);
-                tooltip.add(fulltip);
-            }
-        } else {
+        NBTTagCompound compound = NBTUtil.getTagCompoundSafe(stack);
+        BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(compound.getCompoundTag("tolink"));
+        int x = p.getX();
+        int y = p.getY();
+        int z = p.getZ();
+        // (0, 0, 0) isn't reachable without breaking bedrock
+        if (y == 0) {
             tooltip.add(I18n.format("mouseovertext.ley_key"));
+        } else {
+            String fulltip = I18n.format("mouseovertext.ley_key") + "\nX: " + Integer.toString(x) + "\nY: "
+                    + Integer.toString(y) + "\nZ: " + Integer.toString(z);
+            tooltip.add(fulltip);
         }
+
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
