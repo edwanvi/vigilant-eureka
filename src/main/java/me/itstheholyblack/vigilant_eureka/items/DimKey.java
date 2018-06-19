@@ -73,7 +73,6 @@ public class DimKey extends Item {
         System.out.println(worldIn.getBlockState(pos).getBlock());
 
         if (worldIn.getBlockState(pos).getBlock().equals(ModBlocks.movingdoor)) {
-            System.out.println("clicked on door");
             MovingCastleDoorTile t;
             if (worldIn.getBlockState(pos).getValue(MovingCastleDoor.IS_TOP)) {
                 t = (MovingCastleDoorTile) worldIn.getTileEntity(pos);
@@ -91,16 +90,10 @@ public class DimKey extends Item {
                 return EnumActionResult.FAIL;
             }
         }
-
-        System.out.println("Did not click door, was " + worldIn.getBlockState(pos).getBlock() + " instead.");
-        int x = playerIn.getPosition().getX();
-        int y = playerIn.getPosition().getY();
-        int z = playerIn.getPosition().getZ();
-        int dim = playerIn.dimension;
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
-        tag.setInteger("z", z);
-        tag.setInteger("dim", dim);
+        tag.setInteger("x", playerIn.getPosition().getX());
+        tag.setInteger("y", playerIn.getPosition().getY());
+        tag.setInteger("z", playerIn.getPosition().getZ());
+        tag.setInteger("dim", playerIn.dimension);
         return EnumActionResult.SUCCESS;
     }
 
