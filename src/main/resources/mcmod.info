@@ -13,6 +13,6 @@
     "credits": "Paul Fulham, for being the generous god they are.\nSamuel#2783 (sorry) for the basis of the key texture.\nBord Listian, for the Crystalline Bismuth texture.\nPeople smarter than me, for Forge.",
     "logoFile": "",
     "screenshots": [],
-    "dependencies": []
+    "dependencies": ["Baubles (latest build best build)"]
   }
 ]
