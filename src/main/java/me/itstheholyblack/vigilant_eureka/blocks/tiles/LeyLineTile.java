@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LeyLineTile extends TileEntity implements ITickable {
+
+    private static final ITextComponent ENTER_LEY = new TextComponentTranslation("message.enter_ley").setStyle(new Style().setItalic(true).setColor(TextFormatting.AQUA));
 
     public float ticks = 0;
 
@@ -180,11 +183,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
                     for (Entity e : lastList) {
                         NBTTagCompound compound = e.getEntityData();
                         if (!(compound.getBoolean("inPoly")) && e instanceof EntityPlayer) {
-                            ((EntityPlayer) e).sendStatusMessage(new TextComponentTranslation("message.enter_ley")
-                                    .setStyle(new Style()
-                                            .setItalic(true)
-                                            .setColor(TextFormatting.AQUA)
-                                    ), true);
+                            ((EntityPlayer) e).sendStatusMessage(ENTER_LEY, true);
                         }
                         compound.setBoolean("inPoly", specialPoly.contains(e));
                         compound.setTag("masterPos", NBTUtil.createPosTag(this.pos));

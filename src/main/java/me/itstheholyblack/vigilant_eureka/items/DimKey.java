@@ -20,8 +20,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -32,6 +31,9 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class DimKey extends Item {
+
+    private static final ITextComponent DOOR_SUCCESS_MESSAGE = new TextComponentTranslation("message.door_set_success").setStyle(new Style().setColor(TextFormatting.GREEN));
+    private static final ITextComponent DOOR_FAIL_MESSAGE = new TextComponentTranslation("message.door_set_fail").setStyle(new Style().setColor(TextFormatting.RED));
 
     public DimKey() {
         setRegistryName(Reference.MOD_ID, "dim_key");
@@ -73,20 +75,17 @@ public class DimKey extends Item {
         System.out.println(worldIn.getBlockState(pos).getBlock());
 
         if (worldIn.getBlockState(pos).getBlock().equals(ModBlocks.movingdoor)) {
-            MovingCastleDoorTile t;
-            if (worldIn.getBlockState(pos).getValue(MovingCastleDoor.IS_TOP)) {
-                t = (MovingCastleDoorTile) worldIn.getTileEntity(pos);
-            } else {
-                t = (MovingCastleDoorTile) worldIn.getTileEntity(pos.up());
-            }
-            if (tag != null && t != null && tag.getInteger("y") > 0) {
+            MovingCastleDoorTile t = worldIn.getBlockState(pos).getValue(MovingCastleDoor.IS_TOP) ?
+                    (MovingCastleDoorTile) worldIn.getTileEntity(pos) :
+                    (MovingCastleDoorTile) worldIn.getTileEntity(pos.up());
+            if (t != null && tag.getInteger("y") > 0) {
                 t.setDestination(
                         new BlockPos(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z")),
-                        stack.getTagCompound().getInteger("dim"));
-                playerIn.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "Click."), true);
+                        tag.getInteger("dim"));
+                playerIn.sendStatusMessage(DOOR_SUCCESS_MESSAGE, true);
                 return EnumActionResult.SUCCESS;
             } else if (tag.getInteger("y") <= 0) {
-                playerIn.sendStatusMessage(new TextComponentString(TextFormatting.RED + "It won't turn."), true);
+                playerIn.sendStatusMessage(DOOR_FAIL_MESSAGE, true);
                 return EnumActionResult.FAIL;
             }
         }
