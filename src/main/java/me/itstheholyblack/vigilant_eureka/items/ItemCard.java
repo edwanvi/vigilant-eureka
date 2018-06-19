@@ -71,7 +71,7 @@ public class ItemCard extends Item {
             EntityCard c = new EntityCard(worldIn, playerIn, playerIn.getLook(1).x, playerIn.getLook(1).y, playerIn.getLook(1).z);
             c.setType(EntityCard.TYPES.BLAND);
             c.posY += playerIn.getEyeHeight();
-            c.setPositionAndRotationDirect(c.posX, c.posY, c.posZ, playerIn.cameraYaw, playerIn.cameraPitch, 0, false);
+            c.setPositionAndRotation(c.posX, c.posY, c.posZ, playerIn.cameraYaw, playerIn.cameraPitch);
             worldIn.spawnEntity(c);
 
             ItemStack other;
