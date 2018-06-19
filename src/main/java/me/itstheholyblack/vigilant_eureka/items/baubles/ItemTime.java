@@ -17,6 +17,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
@@ -63,21 +64,23 @@ public class ItemTime extends Item implements IBauble, IRenderBauble {
     @SideOnly(Side.CLIENT)
     public void onPlayerBaubleRender(ItemStack itemStack, EntityPlayer entityPlayer, RenderType renderType, float v) {
         if (renderType.equals(RenderType.BODY)) {
-            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            Helper.rotateIfSneaking(entityPlayer);
-            Helper.translateToChest();
-            Helper.defaultTransforms();
-            scale(1.25F);
-            boolean armor = !entityPlayer.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty();
-            GlStateManager.translate(-0.5F, -0.7F, armor ? 0.1F : 0F);
+            if (!entityPlayer.isInvisible()) {
+                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                Helper.rotateIfSneaking(entityPlayer);
+                Helper.translateToChest();
+                Helper.defaultTransforms();
+                scale(1.25F);
+                boolean armor = !(entityPlayer.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty() || entityPlayer.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem().equals(Items.ELYTRA));
+                GlStateManager.translate(-0.5F, -0.7F, armor ? 0.1F : 0F);
 
-            boolean open = entityPlayer.getCooldownTracker().hasCooldown(this);
-            TextureAtlasSprite gemIcon = open ? Icons.INSTANCE.time_open : Icons.INSTANCE.time_closed;
-            float f = gemIcon.getMinU();
-            float f1 = gemIcon.getMaxU();
-            float f2 = gemIcon.getMinV();
-            float f3 = gemIcon.getMaxV();
-            RenderHelp.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, gemIcon.getIconWidth(), gemIcon.getIconHeight(), 1F / 32F);
+                boolean open = entityPlayer.getCooldownTracker().hasCooldown(this);
+                TextureAtlasSprite gemIcon = open ? Icons.INSTANCE.time_open : Icons.INSTANCE.time_closed;
+                float f = gemIcon.getMinU();
+                float f1 = gemIcon.getMaxU();
+                float f2 = gemIcon.getMinV();
+                float f3 = gemIcon.getMaxV();
+                RenderHelp.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, gemIcon.getIconWidth(), gemIcon.getIconHeight(), 1F / 32F);
+            }
         }
     }
 
@@ -87,6 +90,7 @@ public class ItemTime extends Item implements IBauble, IRenderBauble {
         tooltip.add(I18n.format("mouseovertext.time"));
     }
 
+    @SideOnly(Side.CLIENT)
     private static void scale(float f) {
         GlStateManager.scale(f, f, f);
     }

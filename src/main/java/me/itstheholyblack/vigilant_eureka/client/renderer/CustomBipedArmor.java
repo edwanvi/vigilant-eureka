@@ -10,6 +10,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Class to conditionally render armor, allowing full invisibility. Code concept by Paul Fulham, modified by Edwan Vi into a working state.
  *
@@ -26,7 +28,7 @@ public class CustomBipedArmor implements LayerRenderer<EntityLivingBase> {
     }
 
     @Override
-    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float delta, float age, float yaw, float pitch, float scale) {
+    public void doRenderLayer(@Nonnull EntityLivingBase entity, float limbSwing, float limbSwingAmount, float delta, float age, float yaw, float pitch, float scale) {
         boolean visible = !entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().equals(ModItems.invisCap);
         if (entity instanceof EntityPlayer) {
             visible = visible && !NBTUtil.getPlayerPersist((EntityPlayer) entity).getBoolean("metaphysical_high_ground");
