@@ -17,6 +17,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -29,6 +30,15 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
+
+    private static final ITextComponent IT_WORKED = new TextComponentTranslation("message.ley_link_good").setStyle(new Style().setColor(TextFormatting.GREEN));
+    private static final ITextComponent ALREADY_EXISTS = new TextComponentTranslation("message.ley_link_doublelink").setStyle(new Style().setColor(TextFormatting.RED));
+    private static final ITextComponent TWO_WAY = new TextComponentTranslation("message.ley_link_twoway").setStyle(new Style().setColor(TextFormatting.RED));
+    private static final ITextComponent SELF_LINK = new TextComponentTranslation("message.ley_link_selflink").setStyle(new Style().setColor(TextFormatting.RED));
+
+    private static final ITextComponent LEY_SOLVE_GOOD = new TextComponentTranslation("message.ley_solve_good").setStyle(new Style().setColor(TextFormatting.GREEN));
+    private static final ITextComponent LEY_SOLVE_INCOMPLETE = new TextComponentTranslation("message.ley_solve_incomplete").setStyle(new Style().setColor(TextFormatting.RED));
+
     public BlockLeyLine() {
         super(Material.ROCK, "leyline");
         this.setHardness(Float.POSITIVE_INFINITY);
@@ -46,19 +56,20 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
                 LeyLineTile tile = this.getTileEntity(worldIn, pos);
                 BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(comp.getCompoundTag("tolink"));
                 LeyLineTile.EnumLinkResults results = tile.addLinkOut(p);
-                if (results.equals(LeyLineTile.EnumLinkResults.SUCCEED)) {
-                    comp.removeTag("tolink");
-                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_good").setStyle(new Style().setColor(TextFormatting.GREEN)), true);
-                    return true;
-                } else if (results.equals(LeyLineTile.EnumLinkResults.DOUBLELINK)) {
-                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_doublelink").setStyle(new Style().setColor(TextFormatting.RED)), true);
-                    return false;
-                } else if (results.equals(LeyLineTile.EnumLinkResults.TWOWAY)) {
-                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_twoway").setStyle(new Style().setColor(TextFormatting.RED)), true);
-                    return false;
-                } else {
-                    playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_link_selflink").setStyle(new Style().setColor(TextFormatting.RED)), true);
-                    return false;
+                switch (results) {
+                    case SUCCEED:
+                        comp.removeTag("tolink");
+                        playerIn.sendStatusMessage(IT_WORKED, true);
+                        return true;
+                    case DOUBLELINK:
+                        playerIn.sendStatusMessage(ALREADY_EXISTS, true);
+                        return false;
+                    case TWOWAY:
+                        playerIn.sendStatusMessage(TWO_WAY, true);
+                        return false;
+                    case SELFLINK:
+                        playerIn.sendStatusMessage(SELF_LINK, true);
+                        return false;
                 }
             } else {
                 comp.setTag("tolink", net.minecraft.nbt.NBTUtil.createPosTag(pos));
@@ -72,17 +83,15 @@ public class BlockLeyLine extends BlockTileEntity<LeyLineTile> {
                 for (BlockPos p : poly) {
                     LeyLineTile te = (LeyLineTile) worldIn.getTileEntity(p);
                     te.setPolygon(poly);
-                    if (!te.isLead()) {
-                        continue;
-                    } else {
+                    if (te.isLead()) {
                         hasLeader = true;
                     }
                 }
                 thisTile.setLead(!hasLeader);
-                playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_solve_good").setStyle(new Style().setColor(TextFormatting.GREEN)), true);
+                playerIn.sendStatusMessage(LEY_SOLVE_GOOD, true);
                 return true;
             } else {
-                playerIn.sendStatusMessage(new TextComponentTranslation("message.ley_solve_incomplete").setStyle(new Style().setColor(TextFormatting.RED)), true);
+                playerIn.sendStatusMessage(LEY_SOLVE_INCOMPLETE, true);
                 return false;
             }
         } else if (stack.getItem().equals(ModItems.leyRune)) {

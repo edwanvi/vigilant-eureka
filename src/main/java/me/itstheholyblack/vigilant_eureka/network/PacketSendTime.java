@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -15,11 +16,15 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketSendTime implements IMessage {
 
     private BlockPos look;
     private BlockPos stand;
+
+    private static final ITextComponent EYE_ALREADY_OPEN = new TextComponentTranslation("message.eye_already_open");
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -35,6 +40,8 @@ public class PacketSendTime implements IMessage {
         buf.writeLong(stand.toLong());
     }
 
+
+    @SideOnly(Side.CLIENT)
     public PacketSendTime() {
         RayTraceResult result = Minecraft.getMinecraft().objectMouseOver;
         look = result.getBlockPos();
@@ -61,7 +68,7 @@ public class PacketSendTime implements IMessage {
                 playerEntity.getCooldownTracker().setCooldown(ModItems.itemTime, 100);
                 ChunkRebuilder.rebuildChunk(world, pos, message.stand);
             } else if (playerEntity.getCooldownTracker().hasCooldown(ModItems.itemTime)) {
-                playerEntity.sendStatusMessage(new TextComponentTranslation("message.eye_already_open"), true);
+                playerEntity.sendStatusMessage(EYE_ALREADY_OPEN, true);
             }
         }
     }
