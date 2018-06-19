@@ -44,9 +44,9 @@ import java.util.Map;
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent e) {
-        FMLLog.log.info("Registering Vigilant Eureka event handler.");
+        Reference.LOGGER.info("Registering Vigilant Eureka event handler.");
         MinecraftForge.EVENT_BUS.register(new EventHandler());
-        FMLLog.log.info("Registering Vigilant Eureka networking.");
+        Reference.LOGGER.info("Registering Vigilant Eureka networking.");
         PacketHandler.registerMessages(Reference.MOD_ID);
         ModEntities.init();
         registerTiles();

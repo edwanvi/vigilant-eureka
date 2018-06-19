@@ -161,7 +161,7 @@ public class EventHandler {
         if (name.startsWith(prefix)) {
             String file = name.substring(name.indexOf(prefix) + prefix.length());
             if (file.equals("stronghold_library") || file.equals("simple_dungeon")) {
-                System.out.println("Injecting...");
+                Reference.LOGGER.info("Injecting loot...");
                 evt.getTable().addPool(getInjectPool("simple_dungeon"));
             }
         }

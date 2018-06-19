@@ -1,5 +1,6 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
+import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.core.EnumLeyTypes;
 import me.itstheholyblack.vigilant_eureka.core.Polygon;
@@ -50,16 +51,16 @@ public class LeyLineTile extends TileEntity implements ITickable {
         if (!this.link_out.equals(bp)) {
             LeyLineTile otherLine = (LeyLineTile) this.world.getTileEntity(bp);
             if (!otherLine.link_out.equals(this.getPos())) {
-                System.out.println("Link succeeded!");
+                Reference.LOGGER.debug("Link succeeded!");
                 this.link_out = bp;
                 markDirty();
                 return EnumLinkResults.SUCCEED;
             } else {
-                System.out.println("Link failed - two way connection");
+                Reference.LOGGER.debug("Link failed - two way connection");
                 return EnumLinkResults.TWOWAY;
             }
         } else {
-            System.out.println("Link failed - double linkage");
+            Reference.LOGGER.debug("Link failed - double linkage");
             return EnumLinkResults.DOUBLELINK;
         }
     }
@@ -162,7 +163,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
             } else {
                 LeyLineTile te = (LeyLineTile) this.world.getTileEntity(link_out);
                 if (te.getLinkOut().equals(BlockPos.ORIGIN.down())) {
-                    System.out.println("Linked to BROKEN link node " + this.link_out);
+                    Reference.LOGGER.debug("Linked to BROKEN link node " + this.link_out);
                     this.link_out = BlockPos.ORIGIN.down();
                     markDirty();
                     return;
@@ -217,6 +218,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         // Here we get the packet from the server and read it into our client side tile entity
         this.readFromNBT(packet.getNbtCompound());
