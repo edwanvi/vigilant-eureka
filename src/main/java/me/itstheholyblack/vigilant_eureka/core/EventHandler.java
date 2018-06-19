@@ -42,40 +42,27 @@ public class EventHandler {
     @SubscribeEvent
     public void livingTick(LivingEvent.LivingUpdateEvent event) {
         EntityLivingBase e = event.getEntityLiving();
-        if (e.isElytraFlying()) { // OH YES
+        if (e.isElytraFlying()) {
             BlockPos pos = e.getPosition();
             World worldIn = e.getEntityWorld();
-            int i = 0;
-            while (i <= 9) {
-                BlockPos scanpos = pos.down(i);
-                Block scanned = worldIn.getBlockState(scanpos).getBlock();
+            for (int i = 0; i < 10; i++) {
+                Block scanned = worldIn.getBlockState(pos.down(i)).getBlock();
                 if (scanned.equals(Blocks.FIRE) || scanned.equals(Blocks.LAVA) || scanned.equals(Blocks.FLOWING_LAVA)) {
                     // boost player, using code stolen from Mojang
                     Vec3d vec3d = e.getLookVec();
-                    double d0 = 1.5D;
-                    double d1 = 0.1D;
-                    e.motionX += vec3d.x * d1 + (vec3d.x * d0 - e.motionX) * 0.2D;
-                    e.motionZ += vec3d.z * d1 + (vec3d.z * d0 - e.motionZ) * 0.2D;
-                    double up_boost;
-                    if (i > 0) {
-                        // A graph of this function is available at https://www.desmos.com/calculator/ss7gkav3cb
-                        // where i is the x axis.
-                        up_boost = -0.07 * i + 0.6;
-                    } else {
-                        up_boost = 0.07;
-                    }
-                    if (up_boost > 0) {
-                        e.addVelocity(0, up_boost, 0);
-                    }
+                    e.motionX += vec3d.x * 0.1 + (vec3d.x * 1.5 - e.motionX) * 0.2D;
+                    e.motionZ += vec3d.z * 0.1 + (vec3d.z * 1.5 - e.motionZ) * 0.2D;
+                    // A graph of this function is available at https://www.desmos.com/calculator/ss7gkav3cb
+                    // where i is the x axis.
+                    e.addVelocity(0, i > 0 ? -0.07 * i + 0.6 : 0.07, 0);
                     break;
                 } else if (!scanned.equals(Blocks.AIR)) {
                     break;
                 }
-                i++;
             }
         }
-        if (e.getEntityData().getBoolean("inPoly")) {
-            NBTTagCompound entityData = e.getEntityData();
+        NBTTagCompound entityData = e.getEntityData();
+        if (entityData.getBoolean("inPoly")) {
             BlockPos pos = NBTUtil.getPosFromTag(entityData.getCompoundTag("masterPos"));
             // test if entity still in polygon
             TileEntity tile = e.getEntityWorld().getTileEntity(pos);
@@ -105,18 +92,21 @@ public class EventHandler {
                 }
             }
         }
+
+        if (e instanceof EntityPlayer) {
+            NBTTagCompound playerData = me.itstheholyblack.vigilant_eureka.util.NBTUtil.getPlayerPersist((EntityPlayer) e);
+            if (playerData.getBoolean("metaphysical_high_ground")) {
+                e.setInvisible(true); // simply doing e.setInvisible(playerData.getBoolean("metaphysical_high_ground")) causes invis pots to fail
+            }
+        }
     }
 
     @SubscribeEvent
     public void armorChanged(LivingEquipmentChangeEvent event) {
         ItemStack oldStack = event.getFrom();
-        ItemStack newStack = event.getTo();
         EntityEquipmentSlot slot = event.getSlot();
         if (slot.equals(EntityEquipmentSlot.HEAD)) {
-            if (newStack.getItem().equals(ModItems.invisCap)) {
-                // switch to the invis cap
-                event.getEntityLiving().setInvisible(true);
-            } else if (oldStack.getItem().equals(ModItems.invisCap)) {
+            if (oldStack.getItem().equals(ModItems.invisCap)) {
                 // switch off cap
                 event.getEntityLiving().setInvisible(false);
             }
