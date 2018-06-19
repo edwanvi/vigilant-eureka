@@ -101,6 +101,7 @@ public class CommonProxy {
 
     private static class TileEntitySpaceFixer implements IFixableData {
         private final Map<String, String> tileEntityNames;
+
         {
             ImmutableMap.Builder<String, String> nameMap = ImmutableMap.builder();
             nameMap.put("minecraft:19d2daed26722f2762d067603604a6d1f909f262leytile", "vigilant_eureka:leytile");
