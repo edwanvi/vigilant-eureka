@@ -2,7 +2,7 @@ package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.core.EnumLeyTypes;
-import me.itstheholyblack.vigilant_eureka.core.NBTUtil;
+import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

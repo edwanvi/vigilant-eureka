@@ -1,16 +1,18 @@
 [
-{
-  "modid": "vigilant_eureka",
-  "name": "Vigilant Eureka",
-  "description": "A mod that does things to the Minecraft.\nSource is available at https://github.com/tkdberger/vigilant-eureka",
-  "version": "0.0.2",
-  "mcversion": "1.12",
-  "url": "https://minecraft.curseforge.com/projects/vigilant-eureka",
-  "updateUrl": "",
-  "authorList": ["Edwan Vi"],
-  "credits": "Paul Fulham, for being the generous god they are.\nSamuel#2783 (sorry) for the basis of the key texture.\nBord Listian, for the Crystalline Bismuth texture.\nPeople smarter than me, for Forge.",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "vigilant_eureka",
+    "name": "Vigilant Eureka",
+    "description": "A mod that does things to the Minecraft.\nSource is available at https://github.com/tkdberger/vigilant-eureka",
+    "version": "0.0.4",
+    "mcversion": "1.12",
+    "url": "https://minecraft.curseforge.com/projects/vigilant-eureka",
+    "updateUrl": "",
+    "authorList": [
+      "Edwan Vi"
+    ],
+    "credits": "Paul Fulham, for being the generous god they are.\nSamuel#2783 (sorry) for the basis of the key texture.\nBord Listian, for the Crystalline Bismuth texture.\nPeople smarter than me, for Forge.",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": ["Baubles (latest build best build)"]
+  }
 ]

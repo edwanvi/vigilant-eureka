@@ -32,6 +32,10 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
         int green = 0;
         if (te.isLead()) {
             green = 255;
+        } else if (te.getLinkOut().equals(BlockPos.ORIGIN.down())) {
+            red = 0;
+            blue = 255;
+            green = 0;
         } else {
             red = 255;
             blue = 255;
@@ -84,7 +88,8 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
 
 
         BlockPos pos = te.getLinkOut();
-        if (!pos.equals(BlockPos.ORIGIN)) {
+        if (!pos.equals(BlockPos.ORIGIN) && !pos.equals(BlockPos.ORIGIN.down())) {
+            GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             GlStateManager.disableAlpha();
@@ -93,22 +98,23 @@ public class LeyLineTileRenderer extends TileEntitySpecialRenderer<LeyLineTile> 
 
             bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-            bufferbuilder.pos(0.5, 0.375, 0.5).color(255, 255, 255, 255).endVertex();
-            bufferbuilder.pos(0.5, 0.625, 0.5).color(255, 255, 255, 255).endVertex();
+            bufferbuilder.pos(0.5, 0.375, 0.5).color(0, 255, 255, 255).endVertex();
+            bufferbuilder.pos(0.5, 0.625, 0.5).color(0, 255, 255, 255).endVertex();
 
             bufferbuilder.pos(
                     (pos.getX() - te.getPos().getX()) + 0.5,
                     (pos.getY() - te.getPos().getY()) + 0.375,
                     (pos.getZ() - te.getPos().getZ()) + 0.5)
-                    .color(255, 255, 255, 255).endVertex();
+                    .color(0, 255, 255, 255).endVertex();
             bufferbuilder.pos(
                     (pos.getX() - te.getPos().getX()) + 0.5,
                     (pos.getY() - te.getPos().getY()) + 0.625,
                     (pos.getZ() - te.getPos().getZ()) + 0.5)
-                    .color(255, 255, 255, 255).endVertex();
+                    .color(0, 255, 255, 255).endVertex();
             tessellator.draw();
 
             GlStateManager.popMatrix();
+            GlStateManager.enableTexture2D();
             GlStateManager.disableBlend();
             GlStateManager.enableAlpha();
         }

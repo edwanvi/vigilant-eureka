@@ -3,10 +3,12 @@ package me.itstheholyblack.vigilant_eureka.proxy;
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
+import me.itstheholyblack.vigilant_eureka.client.Icons;
 import me.itstheholyblack.vigilant_eureka.client.Keybinds;
 import me.itstheholyblack.vigilant_eureka.client.LeyLineTileRenderer;
 import me.itstheholyblack.vigilant_eureka.client.renderer.CustomBipedArmor;
 import me.itstheholyblack.vigilant_eureka.core.InputHandler;
+import me.itstheholyblack.vigilant_eureka.entity.ModEntities;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -35,13 +37,14 @@ public class ClientProxy extends CommonProxy {
     public static void registerModels(ModelRegistryEvent event) {
         ModBlocks.initModels();
         ModItems.initModels();
+        ModEntities.initModels();
     }
 
     @SideOnly(Side.CLIENT)
-    @SubscribeEvent
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        MinecraftForge.EVENT_BUS.register(Icons.INSTANCE);
         Keybinds.initWarpKey();
     }
 
@@ -52,7 +55,6 @@ public class ClientProxy extends CommonProxy {
      * @author Paul Fulham
      */
     @SideOnly(Side.CLIENT)
-    @SubscribeEvent
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);

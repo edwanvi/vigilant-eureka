@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 public class Keybinds {
 
     public static KeyBinding warpKey;
+    public static KeyBinding timeKey;
 
     private static KeyBinding init(String s, int key, String group) {
         KeyBinding kb = new KeyBinding(Reference.MOD_ID + ".keybind." + s, key, group);
@@ -20,5 +21,6 @@ public class Keybinds {
 
     public static void initWarpKey() {
         warpKey = init("warp_key", Keyboard.KEY_R, Reference.MOD_ID + ".gui.keybinds");
+        timeKey = init("time_key", Keyboard.KEY_G, Reference.MOD_ID + ".gui.keybinds");
     }
 }

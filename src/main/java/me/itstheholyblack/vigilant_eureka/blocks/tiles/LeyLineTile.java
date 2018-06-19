@@ -1,5 +1,6 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
+import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.ModBlocks;
 import me.itstheholyblack.vigilant_eureka.core.EnumLeyTypes;
 import me.itstheholyblack.vigilant_eureka.core.Polygon;
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LeyLineTile extends TileEntity implements ITickable {
+
+    private static final ITextComponent ENTER_LEY = new TextComponentTranslation("message.enter_ley").setStyle(new Style().setItalic(true).setColor(TextFormatting.AQUA));
 
     public float ticks = 0;
 
@@ -50,16 +54,16 @@ public class LeyLineTile extends TileEntity implements ITickable {
         if (!this.link_out.equals(bp)) {
             LeyLineTile otherLine = (LeyLineTile) this.world.getTileEntity(bp);
             if (!otherLine.link_out.equals(this.getPos())) {
-                System.out.println("Link succeeded!");
+                Reference.LOGGER.debug("Link succeeded!");
                 this.link_out = bp;
                 markDirty();
                 return EnumLinkResults.SUCCEED;
             } else {
-                System.out.println("Link failed - two way connection");
+                Reference.LOGGER.debug("Link failed - two way connection");
                 return EnumLinkResults.TWOWAY;
             }
         } else {
-            System.out.println("Link failed - double linkage");
+            Reference.LOGGER.debug("Link failed - double linkage");
             return EnumLinkResults.DOUBLELINK;
         }
     }
@@ -141,15 +145,35 @@ public class LeyLineTile extends TileEntity implements ITickable {
         return compound;
     }
 
+    public boolean isLinked() {
+        return !this.link_out.equals(BlockPos.ORIGIN) && !this.link_out.equals(BlockPos.ORIGIN.down());
+    }
+
     @Override
     public void update() {
         ticks = ticks + 0.1F;
-        if (!this.world.isRemote && !this.link_out.equals(BlockPos.ORIGIN) && this.world.isAreaLoaded(this.getPos(), 16)) {
+
+        if (this.link_out.equals(BlockPos.ORIGIN.down())) {
+            this.link_out = BlockPos.ORIGIN;
+            markDirty();
+        }
+
+        if (!this.world.isRemote && this.isLinked() && this.world.isAreaLoaded(this.getPos(), 16)) {
             if (!this.getWorld().getBlockState(link_out).getBlock().equals(ModBlocks.leyLine)) {
-                link_out = BlockPos.ORIGIN;
+                link_out = BlockPos.ORIGIN.down();
                 markDirty();
+                return;
+            } else {
+                LeyLineTile te = (LeyLineTile) this.world.getTileEntity(link_out);
+                if (te.getLinkOut().equals(BlockPos.ORIGIN.down())) {
+                    Reference.LOGGER.debug("Linked to BROKEN link node " + this.link_out);
+                    this.link_out = BlockPos.ORIGIN.down();
+                    markDirty();
+                    return;
+                }
             }
         }
+
         if (isLead) {
             delayCounter--;
             if (delayCounter <= 0 || lastList == null) {
@@ -159,11 +183,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
                     for (Entity e : lastList) {
                         NBTTagCompound compound = e.getEntityData();
                         if (!(compound.getBoolean("inPoly")) && e instanceof EntityPlayer) {
-                            ((EntityPlayer) e).sendStatusMessage(new TextComponentTranslation("message.enter_ley")
-                                    .setStyle(new Style()
-                                            .setItalic(true)
-                                            .setColor(TextFormatting.AQUA)
-                                    ), true);
+                            ((EntityPlayer) e).sendStatusMessage(ENTER_LEY, true);
                         }
                         compound.setBoolean("inPoly", specialPoly.contains(e));
                         compound.setTag("masterPos", NBTUtil.createPosTag(this.pos));
@@ -197,6 +217,7 @@ public class LeyLineTile extends TileEntity implements ITickable {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         // Here we get the packet from the server and read it into our client side tile entity
         this.readFromNBT(packet.getNbtCompound());
@@ -217,7 +238,6 @@ public class LeyLineTile extends TileEntity implements ITickable {
     }
 
     public enum EnumLinkResults {
-        SUCCEED, SELFLINK, DOUBLELINK, TWOWAY;
+        SUCCEED, SELFLINK, DOUBLELINK, TWOWAY
     }
-
 }

@@ -7,17 +7,25 @@ item.vigilant_eureka.warp_boots.name=Warp Boots
 item.vigilant_eureka.invis_cap.name=Invisibility Cap
 item.vigilant_eureka.bismite.name=Bismite Deposit
 item.vigilant_eureka.ley_key.name=Crystalline Bismuth
+item.vigilant_eureka.throwing_card.name=Throwing Card
+item.vigilant_eureka.time.name=Time's Eye
 
 mouseovertext.dim_key=A key that opens many doors. That life has. Ed boy.
 mouseovertext.dim_door=A door. That moves you. To places. With motion. It's like magic, but better.
 mouseovertext.invis_cap=It's a cap that makes you invisible. Hey, that'd be cool as a cloak!
 mouseovertext.warp_boots=Boots that can outrun space and time, because that's definitely something your mortal feet can handle.
 mouseovertext.ley_key=Bismuth, melted into strange and alien shapes. Or just squares, one of the two.
+mouseovertext.throwing_card=The card seems to hum with energy. Maybe you should throw it?
+mouseovertext.time=A strange gilded eye-shaped amulet. What would happen if you opened it?
 
 itemGroup.vigilantEureka=Vigilant Eureka
 
 vigilant_eureka.keybind.warp_key=Warp with Warp Boots
+vigilant_eureka.keybind.time_key=Open the Eye
 vigilant_eureka.gui.keybinds=Vigilant Eureka
+
+message.door_set_success=Click
+message.door_set_fail=It won't turn.
 
 message.ley_link_good=It worked!
 message.ley_link_selflink=The feedback loop quickly decays to nothing...
@@ -26,5 +34,10 @@ message.ley_link_twoway=Two way links aren't acceptable.
 
 message.ley_solve_good=The links pulse and strengthen.
 message.ley_solve_incomplete=The line isn't complete!
-
 message.enter_ley=Something feels different.
+
+message.eye_already_open=The eye is stubbornly open - perhaps you must wait for it to close?
+
+message.body=Is that me?
+
+entity.vigilant_eureka:player_body.name=Someone's body

@@ -17,8 +17,14 @@ public abstract class BlockTileEntity<TE extends TileEntity> extends Block {
         super(material);
     }
 
+    /**
+     * Returns the {@link Class} of this block's tile entity
+     */
     public abstract Class<TE> getTileEntityClass();
 
+    /**
+     * Returns the {@link TE} instance for this specific block
+     */
     public TE getTileEntity(IBlockAccess world, BlockPos pos) {
         return (TE) world.getTileEntity(pos);
     }

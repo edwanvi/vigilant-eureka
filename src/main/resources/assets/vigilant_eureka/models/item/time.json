@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "vigilant_eureka:items/time"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "open_eye": 1
+      },
+      "model": "vigilant_eureka:item/time_open"
+    }
+  ]
+}

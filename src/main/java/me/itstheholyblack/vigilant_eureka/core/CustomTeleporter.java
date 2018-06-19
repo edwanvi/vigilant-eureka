@@ -42,7 +42,7 @@ public class CustomTeleporter extends Teleporter {
     public static void teleportToDimension(EntityPlayer player, int dimension, double x, double y, double z) {
         int oldDimension = player.world.provider.getDimension();
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player;
-        MinecraftServer server = ((EntityPlayerMP) player).world.getMinecraftServer();
+        MinecraftServer server = entityPlayerMP.world.getMinecraftServer();
         WorldServer worldServer = server.getWorld(dimension);
         player.addExperienceLevel(0);
 

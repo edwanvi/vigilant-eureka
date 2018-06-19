@@ -3,6 +3,7 @@ package me.itstheholyblack.vigilant_eureka.items;
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.items.armor.InvisCap;
 import me.itstheholyblack.vigilant_eureka.items.armor.WarpBoots;
+import me.itstheholyblack.vigilant_eureka.items.baubles.ItemTime;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -24,6 +25,10 @@ public class ModItems {
     public static ItemLeyRune leyRune;
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":debug_stick")
     public static DebugStick debugStick;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":throwing_card")
+    public static ItemCard itemCard;
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":time")
+    public static ItemTime itemTime;
 
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs("vigilantEureka") {
         @Override
@@ -37,8 +42,10 @@ public class ModItems {
         dimKey.initModel();
         warpBoots.initModel();
         invisCap.initModel();
+        itemTime.initModel();
         bismite.initModel();
         leyKey.initModel();
         debugStick.initModel();
+        itemCard.initModel();
     }
 }

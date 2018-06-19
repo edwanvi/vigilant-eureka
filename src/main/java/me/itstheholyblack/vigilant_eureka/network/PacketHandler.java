@@ -12,7 +12,7 @@ public class PacketHandler {
     public PacketHandler() {
     }
 
-    public static int nextID() {
+    private static int nextID() {
         return packetId++;
     }
 
@@ -22,8 +22,10 @@ public class PacketHandler {
     }
 
     public static void registerMessages() {
-        // Register messages which are sent from the client to the server here:
-        INSTANCE.registerMessage(PacketSendKey.Handler.class, PacketSendKey.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketSendWarp.Handler.class, PacketSendWarp.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketSendTime.Handler.class, PacketSendTime.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(PacketSpawnBody.Handler.class, PacketSpawnBody.class, nextID(), Side.SERVER);
+
         INSTANCE.registerMessage(PacketEndericPoof.Handler.class, PacketEndericPoof.class, nextID(), Side.CLIENT);
     }
 }

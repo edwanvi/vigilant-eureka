@@ -1,12 +1,17 @@
 package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -23,29 +28,31 @@ public class ItemLeyKey extends Item {
         setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        if (playerIn.isSneaking()) {
+            NBTUtil.getTagCompoundSafe(stack).removeTag("tolink");
+        }
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        NBTTagCompound compound = stack.getTagCompound();
-        if (compound != null) {
-            BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(compound.getCompoundTag("tolink"));
-            int x;
-            int y;
-            int z;
-            x = p.getX();
-            y = p.getY();
-            z = p.getZ();
-            // (0, 0, 0) isn't reachable without breaking bedrock
-            if (y == 0) {
-                tooltip.add(I18n.format("mouseovertext.ley_key"));
-            } else {
-                String fulltip = I18n.format("mouseovertext.ley_key") + "\nX: " + Integer.toString(x) + "\nY: "
-                        + Integer.toString(y) + "\nZ: " + Integer.toString(z);
-                tooltip.add(fulltip);
-            }
-        } else {
+        NBTTagCompound compound = NBTUtil.getTagCompoundSafe(stack);
+        BlockPos p = net.minecraft.nbt.NBTUtil.getPosFromTag(compound.getCompoundTag("tolink"));
+        int x = p.getX();
+        int y = p.getY();
+        int z = p.getZ();
+        // (0, 0, 0) isn't reachable without breaking bedrock
+        if (y == 0) {
             tooltip.add(I18n.format("mouseovertext.ley_key"));
+        } else {
+            String fulltip = I18n.format("mouseovertext.ley_key") + "\nX: " + Integer.toString(x) + "\nY: "
+                    + Integer.toString(y) + "\nZ: " + Integer.toString(z);
+            tooltip.add(fulltip);
         }
+
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
@@ -56,6 +63,6 @@ public class ItemLeyKey extends Item {
 
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack) {
-        return me.itstheholyblack.vigilant_eureka.core.NBTUtil.getTagCompoundSafe(stack).hasKey("tolink");
+        return NBTUtil.getTagCompoundSafe(stack).hasKey("tolink");
     }
 }
