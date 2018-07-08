@@ -150,16 +150,11 @@ public class EventHandler {
     // loot tables
     @SubscribeEvent
     public void lootLoad(LootTableLoadEvent evt) {
-        String prefix;
-        String name = evt.getName().toString();
+        ResourceLocation name = evt.getName();
 
-        if (name.startsWith("minecraft:chests/")) {
-            prefix = "minecraft:chests/";
-            String file = name.substring(name.indexOf(prefix) + prefix.length());
-            if (file.equals("stronghold_library") || file.equals("simple_dungeon")) {
-                Reference.LOGGER.info("Injecting loot into table " + file + "...");
-                evt.getTable().addPool(getInjectPool("simple_dungeon"));
-            }
+        if (name.equals(LootTableList.CHESTS_STRONGHOLD_LIBRARY) || name.equals(LootTableList.CHESTS_SIMPLE_DUNGEON)) {
+            Reference.LOGGER.info("Injecting loot into pool " + name.toString());
+            evt.getTable().addPool(getInjectPool("simple_dungeon"));
         } else if (evt.getName().equals(LootTableList.ENTITIES_VEX)) {
             Reference.LOGGER.info("Injecting loot into table vex...");
             evt.getTable().addPool(getInjectPool("vex"));
