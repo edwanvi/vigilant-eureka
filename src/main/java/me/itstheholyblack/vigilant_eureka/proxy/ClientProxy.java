@@ -13,6 +13,7 @@ import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.client.renderer.entity.layers.LayerElytra;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -66,8 +67,8 @@ public class ClientProxy extends CommonProxy {
             ListIterator<LayerRenderer<EntityLivingBase>> iter = layers.listIterator();
             while (iter.hasNext()) {
                 LayerRenderer<EntityLivingBase> layer = iter.next();
-                if (layer instanceof LayerBipedArmor) {
-                    iter.set(new CustomBipedArmor((LayerBipedArmor) layer));
+                if (layer instanceof LayerBipedArmor || layer instanceof LayerElytra) {
+                    iter.set(new CustomBipedArmor<>(layer));
                 }
             }
         });
