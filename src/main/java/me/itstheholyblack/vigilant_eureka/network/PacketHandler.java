@@ -27,5 +27,6 @@ public class PacketHandler {
         INSTANCE.registerMessage(PacketSpawnBody.Handler.class, PacketSpawnBody.class, nextID(), Side.SERVER);
 
         INSTANCE.registerMessage(PacketEndericPoof.Handler.class, PacketEndericPoof.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(PacketUpdateGhostly.Handler.class, PacketUpdateGhostly.class, nextID(), Side.CLIENT);
     }
 }

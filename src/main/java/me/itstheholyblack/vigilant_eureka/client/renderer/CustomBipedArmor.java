@@ -1,5 +1,6 @@
 package me.itstheholyblack.vigilant_eureka.client.renderer;
 
+import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
@@ -7,6 +8,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,21 +21,17 @@ import javax.annotation.Nonnull;
  * @author Edwan Vi
  */
 @SideOnly(Side.CLIENT)
-public class CustomBipedArmor implements LayerRenderer<EntityLivingBase> {
+public class CustomBipedArmor<T extends LayerRenderer<EntityLivingBase>> implements LayerRenderer<EntityLivingBase> {
 
-    private LayerBipedArmor layer;
+    private T layer;
 
-    public CustomBipedArmor(LayerBipedArmor l) {
+    public CustomBipedArmor(T l) {
         this.layer = l;
     }
 
     @Override
     public void doRenderLayer(@Nonnull EntityLivingBase entity, float limbSwing, float limbSwingAmount, float delta, float age, float yaw, float pitch, float scale) {
-        boolean visible = !entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().equals(ModItems.invisCap);
-        if (entity instanceof EntityPlayer) {
-            visible = visible && !NBTUtil.getPlayerPersist((EntityPlayer) entity).getBoolean("metaphysical_high_ground");
-        }
-        if (visible) {
+        if (GhostlyCapability.getHandler(entity).isVisible()) {
             layer.doRenderLayer(entity, limbSwing, limbSwingAmount, delta, age, yaw, pitch, scale);
         }
     }

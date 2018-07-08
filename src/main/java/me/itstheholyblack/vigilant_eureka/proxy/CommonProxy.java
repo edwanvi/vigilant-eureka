@@ -5,6 +5,8 @@ import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.*;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
+import me.itstheholyblack.vigilant_eureka.capabilities.CapAdder;
+import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
 import me.itstheholyblack.vigilant_eureka.core.EventHandler;
 import me.itstheholyblack.vigilant_eureka.entity.ModEntities;
 import me.itstheholyblack.vigilant_eureka.items.*;
@@ -25,6 +27,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.IFixableData;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.ModFixs;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -46,15 +49,16 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         Reference.LOGGER.info("Registering Vigilant Eureka event handler.");
         MinecraftForge.EVENT_BUS.register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new CapAdder());
         Reference.LOGGER.info("Registering Vigilant Eureka networking.");
         PacketHandler.registerMessages(Reference.MOD_ID);
         ModEntities.init();
         registerTiles();
+        CapabilityManager.INSTANCE.register(GhostlyCapability.IGhostlyHandler.class, new GhostlyCapability.Storage(), GhostlyCapability.DefaultGhostly::new);
     }
 
     public void init(FMLInitializationEvent e) {
-        WorldGenBismuth worldGenBismuth = new WorldGenBismuth();
-        GameRegistry.registerWorldGenerator(worldGenBismuth, 100);
+        GameRegistry.registerWorldGenerator(new WorldGenBismuth(), 100);
         GameRegistry.registerWorldGenerator(new WorldGenLey(), 100);
         GameRegistry.addSmelting(ModItems.bismite, new ItemStack(ModItems.leyKey), 0.7F);
         // fix the tiles
@@ -91,11 +95,12 @@ public class CommonProxy {
         event.getRegistry().register(new WarpBoots());
         event.getRegistry().register(new InvisCap());
         event.getRegistry().register(new ItemTime());
-        event.getRegistry().register(new ItemBismite());
         event.getRegistry().register(new ItemLeyKey());
         event.getRegistry().register(new ItemLeyRune());
         event.getRegistry().register(new DebugStick());
         event.getRegistry().register(new ItemCard());
+        event.getRegistry().register(new Item().setRegistryName(Reference.MOD_ID, "bismite").setUnlocalizedName(Reference.MOD_ID + ".bismite").setCreativeTab(ModItems.CREATIVE_TAB));
+        event.getRegistry().register(new Item().setRegistryName(Reference.MOD_ID, "vex_feather").setUnlocalizedName(Reference.MOD_ID + ".vex_feather").setCreativeTab(ModItems.CREATIVE_TAB));
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 
@@ -104,6 +109,7 @@ public class CommonProxy {
 
         {
             ImmutableMap.Builder<String, String> nameMap = ImmutableMap.builder();
+            // don't ask, ok
             nameMap.put("minecraft:19d2daed26722f2762d067603604a6d1f909f262leytile", "vigilant_eureka:leytile");
             nameMap.put("19d2daed26722f2762d067603604a6d1f909f262leytile", "vigilant_eureka:leytile");
             nameMap.put("minecraft:leytile", "vigilant_eureka:leytile");

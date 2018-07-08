@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.items;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
 import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
 import me.itstheholyblack.vigilant_eureka.network.PacketSpawnBody;
 import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,14 +33,25 @@ public class DebugStick extends Item {
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        NBTTagCompound persist = NBTUtil.getPlayerPersist(playerIn);
-        if (!persist.getBoolean("metaphysical_high_ground")) {
-            persist.setBoolean("metaphysical_high_ground", true);
-            playerIn.setInvisible(true);
+        GhostlyCapability.IGhostlyHandler handler = GhostlyCapability.getHandler(playerIn);
+        if (playerIn.isSneaking()) {
+            System.out.println(handler.isVisible() + ", clientside: " + worldIn.isRemote);
+            return EnumActionResult.SUCCESS;
+        }
+        if (handler.isVisible()) {
             if (worldIn.isRemote) {
                 PacketHandler.INSTANCE.sendToServer(new PacketSpawnBody());
+            } else {
+                handler.setVisible(false);
+                GhostlyCapability.causeSync(handler, playerIn);
             }
             return EnumActionResult.SUCCESS;
+        } else {
+            playerIn.sendStatusMessage(new TextComponentString("already invisible - fixing!"), true);
+            if (!worldIn.isRemote) {
+                handler.setVisible(true);
+                GhostlyCapability.causeSync(handler, playerIn);
+            }
         }
         return EnumActionResult.FAIL;
     }

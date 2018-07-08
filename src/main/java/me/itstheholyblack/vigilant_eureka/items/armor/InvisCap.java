@@ -1,6 +1,7 @@
 package me.itstheholyblack.vigilant_eureka.items.armor;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
+import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -37,6 +38,10 @@ public class InvisCap extends ItemArmor {
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
-        player.setInvisible(true);
+        GhostlyCapability.IGhostlyHandler handle = GhostlyCapability.getHandler(player);
+        if (handle.isVisible() && !world.isRemote) {
+            handle.setVisible(false);
+            GhostlyCapability.causeSync(handle, player);
+        }
     }
 }

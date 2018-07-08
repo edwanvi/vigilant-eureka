@@ -2,6 +2,7 @@ package me.itstheholyblack.vigilant_eureka.core;
 
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
+import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,10 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootEntryTable;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
@@ -92,13 +90,6 @@ public class EventHandler {
                 }
             }
         }
-
-        if (e instanceof EntityPlayer) {
-            NBTTagCompound playerData = me.itstheholyblack.vigilant_eureka.util.NBTUtil.getPlayerPersist((EntityPlayer) e);
-            if (playerData.getBoolean("metaphysical_high_ground")) {
-                e.setInvisible(true); // simply doing e.setInvisible(playerData.getBoolean("metaphysical_high_ground")) causes invis pots to fail
-            }
-        }
     }
 
     @SubscribeEvent
@@ -108,7 +99,11 @@ public class EventHandler {
         if (slot.equals(EntityEquipmentSlot.HEAD)) {
             if (oldStack.getItem().equals(ModItems.invisCap)) {
                 // switch off cap
-                event.getEntityLiving().setInvisible(false);
+                GhostlyCapability.IGhostlyHandler handler = GhostlyCapability.getHandler(event.getEntityLiving());
+                handler.setVisible(true);
+                if (event.getEntityLiving() instanceof EntityPlayer) {
+                    GhostlyCapability.causeSync(handler, (EntityPlayer) event.getEntityLiving());
+                }
             }
         }
     }
@@ -155,15 +150,19 @@ public class EventHandler {
     // loot tables
     @SubscribeEvent
     public void lootLoad(LootTableLoadEvent evt) {
-        String prefix = "minecraft:chests/";
+        String prefix;
         String name = evt.getName().toString();
 
-        if (name.startsWith(prefix)) {
+        if (name.startsWith("minecraft:chests/")) {
+            prefix = "minecraft:chests/";
             String file = name.substring(name.indexOf(prefix) + prefix.length());
             if (file.equals("stronghold_library") || file.equals("simple_dungeon")) {
-                Reference.LOGGER.info("Injecting loot...");
+                Reference.LOGGER.info("Injecting loot into table " + file + "...");
                 evt.getTable().addPool(getInjectPool("simple_dungeon"));
             }
+        } else if (evt.getName().equals(LootTableList.ENTITIES_VEX)) {
+            Reference.LOGGER.info("Injecting loot into table vex...");
+            evt.getTable().addPool(getInjectPool("vex"));
         }
     }
 

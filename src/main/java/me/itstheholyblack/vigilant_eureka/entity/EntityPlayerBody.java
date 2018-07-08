@@ -1,11 +1,12 @@
 package me.itstheholyblack.vigilant_eureka.entity;
 
 import com.google.common.base.Optional;
-import me.itstheholyblack.vigilant_eureka.items.ModItems;
-import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
+import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
+import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
+import me.itstheholyblack.vigilant_eureka.network.PacketUpdateGhostly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -116,9 +117,10 @@ public class EntityPlayerBody extends EntityLiving {
     public void onDeath(@Nonnull DamageSource cause) {
         EntityPlayer p = this.world.getPlayerEntityByUUID(this.getPlayerId());
         if (p != null) {
-            NBTUtil.getPlayerPersist(p).setBoolean("metaphysical_high_ground", false);
-            if (!p.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().equals(ModItems.invisCap)) {
-                p.setInvisible(false);
+            if (!world.isRemote) {
+                GhostlyCapability.IGhostlyHandler handler = GhostlyCapability.getHandler(p);
+                handler.setVisible(true);
+                GhostlyCapability.causeSync(handler, p);
             }
             if (!cause.equals(DamageSource.OUT_OF_WORLD)) {
                 p.attackEntityFrom(cause, p.getHealth());

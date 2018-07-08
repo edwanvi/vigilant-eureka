@@ -56,7 +56,6 @@ public class PacketEndericPoof implements IMessage {
             double r = 5.0D;
             if (player.world.isRemote) {
                 for (int i = 0; i < 24; i++) {
-                    // System.out.println("(X, Y): " + x + ", " + y);
                     for (int j = 0; j < 100; j++) {
                         double yMod = +player.getRNG().nextDouble() * (double) player.height - 0.25D;
                         double yParticle = message.pos.getY() - 1.5 + yMod;
