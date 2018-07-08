@@ -9,10 +9,11 @@ item.vigilant_eureka.bismite.name=Bismite Deposit
 item.vigilant_eureka.ley_key.name=Crystalline Bismuth
 item.vigilant_eureka.throwing_card.name=Throwing Card
 item.vigilant_eureka.time.name=Time's Eye
+item.vigilant_eureka.vex_feather.name=Vex Feather
 
 mouseovertext.dim_key=A key that opens many doors. That life has. Ed boy.
 mouseovertext.dim_door=A door. That moves you. To places. With motion. It's like magic, but better.
-mouseovertext.invis_cap=It's a cap that makes you invisible. Hey, that'd be cool as a cloak!
+mouseovertext.invis_cap=It's a cap that makes you invisible. Hey, that'd be cool as a cloak! The fabric reminds you of ghosts for some reason.
 mouseovertext.warp_boots=Boots that can outrun space and time, because that's definitely something your mortal feet can handle.
 mouseovertext.ley_key=Bismuth, melted into strange and alien shapes. Or just squares, one of the two.
 mouseovertext.throwing_card=The card seems to hum with energy. Maybe you should throw it?
