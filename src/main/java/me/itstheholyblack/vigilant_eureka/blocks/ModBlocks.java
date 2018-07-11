@@ -18,6 +18,9 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder(Reference.MOD_ID + ":bismuth_ore")
     public static BlockBismuthOre bismuthOre;
 
+    @GameRegistry.ObjectHolder(Reference.MOD_ID + ":vexjar")
+    public static BlockJar blockJar;
+
     @SideOnly(Side.CLIENT)
     public static void initModels() {
         firstBlock.initModel();
