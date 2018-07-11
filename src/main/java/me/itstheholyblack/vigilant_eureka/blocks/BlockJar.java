@@ -5,6 +5,10 @@ import me.itstheholyblack.vigilant_eureka.blocks.tiles.JarTile;
 import me.itstheholyblack.vigilant_eureka.items.ModItems;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityVex;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -16,6 +20,13 @@ public class BlockJar extends BlockTileEntity<JarTile> {
         setUnlocalizedName(Reference.MOD_ID + ".vexjar");
         setRegistryName("vexjar");
         setCreativeTab(ModItems.CREATIVE_TAB);
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if (entityIn instanceof EntityVex) {
+            entityIn.attackEntityFrom(DamageSource.CRAMMING, ((EntityVex) entityIn).getHealth());
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package me.itstheholyblack.vigilant_eureka.blocks.tiles;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.monster.EntityVex;
 import net.minecraft.nbt.NBTTagCompound;
@@ -7,17 +8,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class JarTile extends TileEntity implements ITickable {
 
+    int fillLevel;
     boolean isFull;
 
     public JarTile() {
         super();
         this.isFull = false;
+        this.fillLevel = -1;
     }
 
     @Override
@@ -47,21 +51,27 @@ public class JarTile extends TileEntity implements ITickable {
                 motionZ += d3 / d4 * d5 * 0.1D;
             }
 
-            double pull = (1 / (getDistanceSq(vex.posX, vex.posY, vex.posZ) > 1 ? getDistanceSq(vex.posX, vex.posY, vex.posZ) : 1)) * 10;
+            double pull = (1 / getDistanceSq(vex.posX, vex.posY, vex.posZ) > 1 ? getDistanceSq(vex.posX, vex.posY, vex.posZ) : 1) * 10;
             vex.move(MoverType.SELF, motionX * pull, motionY * pull, motionZ * pull);
         }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        this.isFull = compound.getBoolean("isFull");
+        super.readFromNBT(compound);
+        this.fillLevel = compound.getInteger("fillLevel");
     }
 
     @Override
     @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setBoolean("isFull", this.isFull);
+        compound.setInteger("fillLevel", this.fillLevel);
         return compound;
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
     }
 }
