@@ -47,11 +47,7 @@ public class DebugStick extends Item {
             }
             return EnumActionResult.SUCCESS;
         } else {
-            playerIn.sendStatusMessage(new TextComponentString("already invisible - fixing!"), true);
-            if (!worldIn.isRemote) {
-                handler.setVisible(true);
-                GhostlyCapability.causeSync(handler, playerIn);
-            }
+            playerIn.sendStatusMessage(new TextComponentString("already invisible!"), true);
         }
         return EnumActionResult.FAIL;
     }
