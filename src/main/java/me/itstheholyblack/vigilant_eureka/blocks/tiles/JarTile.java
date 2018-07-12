@@ -4,23 +4,25 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.monster.EntityVex;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class JarTile extends TileEntity implements ITickable {
 
-    int fillLevel;
-    boolean isFull;
+    private int fillLevel;
 
     public JarTile() {
         super();
-        this.isFull = false;
         this.fillLevel = -1;
     }
 
@@ -54,6 +56,46 @@ public class JarTile extends TileEntity implements ITickable {
             double pull = (1 / getDistanceSq(vex.posX, vex.posY, vex.posZ) > 1 ? getDistanceSq(vex.posX, vex.posY, vex.posZ) : 1) * 10;
             vex.move(MoverType.SELF, motionX * pull, motionY * pull, motionZ * pull);
         }
+    }
+
+    public void addFill(int fill) {
+        if (this.fillLevel + fill <= 64) {
+            this.setFillLevel(this.fillLevel + fill);
+        }
+    }
+
+    public void setFillLevel(int fillLevel) {
+        this.fillLevel = fillLevel;
+    }
+
+    public int getFillLevel() {
+        return fillLevel;
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound getUpdateTag() {
+        // getUpdateTag() is called whenever the chunkdata is sent to the
+        // client. In contrast getUpdatePacket() is called when the tile entity
+        // itself wants to sync to the client. In many cases you want to send
+        // over the same information in getUpdateTag() as in getUpdatePacket().
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        // Prepare a packet for syncing our TE to the client.
+        // If you have a complex tile entity that doesn't need to have all information on the client you can write a more optimal NBT here.
+        NBTTagCompound nbtTag = new NBTTagCompound();
+        this.writeToNBT(nbtTag);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        // Here we get the packet from the server and read it into our client side tile entity
+        this.readFromNBT(packet.getNbtCompound());
     }
 
     @Override
