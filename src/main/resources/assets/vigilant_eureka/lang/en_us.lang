@@ -25,6 +25,8 @@ vigilant_eureka.keybind.warp_key=Warp with Warp Boots
 vigilant_eureka.keybind.time_key=Open the Eye
 vigilant_eureka.gui.keybinds=Vigilant Eureka
 
+message.fillPre=Fill level:
+
 message.door_set_success=Click
 message.door_set_fail=It won't turn.
 
