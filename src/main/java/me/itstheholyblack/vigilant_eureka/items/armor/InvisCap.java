@@ -20,7 +20,7 @@ import java.util.List;
 public class InvisCap extends ItemArmor {
     public InvisCap() {
         super(ArmorTypes.BUGGER_ME_MAT, 0, EntityEquipmentSlot.HEAD);
-        setUnlocalizedName(Reference.MOD_ID + "." + "invis_cap");
+        setTranslationKey(Reference.MOD_ID + "." + "invis_cap");
         setRegistryName("invis_cap");
         setCreativeTab(ModItems.CREATIVE_TAB);
     }

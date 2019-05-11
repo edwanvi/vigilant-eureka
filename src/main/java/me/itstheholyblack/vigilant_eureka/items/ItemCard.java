@@ -29,7 +29,7 @@ public class ItemCard extends Item {
 
     public ItemCard() {
         setRegistryName(Reference.MOD_ID, "throwing_card");
-        setUnlocalizedName(Reference.MOD_ID + ".throwing_card");
+        setTranslationKey(Reference.MOD_ID + ".throwing_card");
         setMaxStackSize(128);
         setCreativeTab(ModItems.CREATIVE_TAB);
 

@@ -140,7 +140,7 @@ public class EntityCard extends EntityThrowable {
                     } else if (state.getBlock().equals(Blocks.WATER)) {
                         this.world.setBlockState(this.getPosition(), Blocks.ICE.getDefaultState());
                     } else {
-                        BlockPos pos = new BlockPos(r.hitVec.addVector(0, 1, 0));
+                        BlockPos pos = new BlockPos(r.hitVec.add(0, 1, 0));
                         for (int i = -1; i <= 1; ++i) {
                             for (int j = -1; j <= 1; ++j) {
                                 for (int d = -1; d <= 1; ++d) {

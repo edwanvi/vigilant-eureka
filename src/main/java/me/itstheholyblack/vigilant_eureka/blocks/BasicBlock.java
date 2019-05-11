@@ -13,7 +13,7 @@ public class BasicBlock extends Block {
 
     public BasicBlock() {
         super(Material.WOOD);
-        setUnlocalizedName(Reference.MOD_ID + ".firstblock");
+        setTranslationKey(Reference.MOD_ID + ".firstblock");
         setRegistryName("firstblock");
     }
 

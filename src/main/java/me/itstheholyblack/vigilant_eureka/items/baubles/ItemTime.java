@@ -45,7 +45,7 @@ public class ItemTime extends Item implements IBauble, IRenderBauble {
             }
         });
         setRegistryName(Reference.MOD_ID, "time");
-        setUnlocalizedName(Reference.MOD_ID + ".time");
+        setTranslationKey(Reference.MOD_ID + ".time");
         this.setMaxStackSize(1);
         this.setCreativeTab(ModItems.CREATIVE_TAB);
     }

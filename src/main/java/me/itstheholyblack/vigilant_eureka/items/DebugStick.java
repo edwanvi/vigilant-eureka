@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class DebugStick extends Item {
     public DebugStick() {
         setRegistryName(Reference.MOD_ID, "debug_stick");
-        setUnlocalizedName(Reference.MOD_ID + ".debug_stick");
+        setTranslationKey(Reference.MOD_ID + ".debug_stick");
     }
 
     @SideOnly(Side.CLIENT)
