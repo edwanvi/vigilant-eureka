@@ -16,7 +16,7 @@ import java.util.Random;
 public class BlockBismuthOre extends Block {
     public BlockBismuthOre() {
         super(Material.ROCK);
-        setUnlocalizedName(Reference.MOD_ID + ".bismuth_ore");
+        setTranslationKey(Reference.MOD_ID + ".bismuth_ore");
         setRegistryName("bismuth_ore");
         setCreativeTab(ModItems.CREATIVE_TAB);
         setHardness(3.0f);

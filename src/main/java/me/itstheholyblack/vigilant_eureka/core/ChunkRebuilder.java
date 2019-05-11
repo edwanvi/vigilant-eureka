@@ -27,7 +27,7 @@ public class ChunkRebuilder {
     public static void rebuildChunk(World world, BlockPos pos, BlockPos stand) {
         // ngl i stole this from ICBM
         try {
-            Chunk oldChunk = world.getChunkFromChunkCoords(pos.getX() >> 4, pos.getZ() >> 4);
+            Chunk oldChunk = world.getChunk(pos);
             IChunkProvider provider = world.getChunkProvider();
             IChunkGenerator generator = ((ChunkProviderServer) provider).chunkGenerator;
             Chunk newChunk = generator.generateChunk(oldChunk.x, oldChunk.z);

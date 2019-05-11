@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemLeyKey extends Item {
     public ItemLeyKey() {
         setRegistryName(Reference.MOD_ID, "ley_key");
-        setUnlocalizedName(Reference.MOD_ID + ".ley_key");
+        setTranslationKey(Reference.MOD_ID + ".ley_key");
         setMaxStackSize(1); // category of one
         setCreativeTab(ModItems.CREATIVE_TAB);
     }

@@ -16,7 +16,7 @@ public class ItemLeyRune extends Item {
 
     public ItemLeyRune() {
         setRegistryName(Reference.MOD_ID, "ley_rune");
-        setUnlocalizedName(Reference.MOD_ID + ".ley_rune");
+        setTranslationKey(Reference.MOD_ID + ".ley_rune");
         setMaxStackSize(1); // category of one
         setCreativeTab(ModItems.CREATIVE_TAB);
     }

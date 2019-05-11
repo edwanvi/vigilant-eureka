@@ -18,7 +18,7 @@ import java.util.List;
 public class WarpBoots extends ItemArmor {
     public WarpBoots() {
         super(ArmorTypes.BUGGER_ME_MAT, 0, EntityEquipmentSlot.FEET);
-        setUnlocalizedName(Reference.MOD_ID + "." + "warp_boots");
+        setTranslationKey(Reference.MOD_ID + "." + "warp_boots");
         setRegistryName("warp_boots");
         setCreativeTab(ModItems.CREATIVE_TAB);
     }

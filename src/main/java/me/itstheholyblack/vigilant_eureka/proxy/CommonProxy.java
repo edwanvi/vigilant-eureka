@@ -99,8 +99,8 @@ public class CommonProxy {
         event.getRegistry().register(new ItemLeyRune());
         event.getRegistry().register(new DebugStick());
         event.getRegistry().register(new ItemCard());
-        event.getRegistry().register(new Item().setRegistryName(Reference.MOD_ID, "bismite").setUnlocalizedName(Reference.MOD_ID + ".bismite").setCreativeTab(ModItems.CREATIVE_TAB));
-        event.getRegistry().register(new Item().setRegistryName(Reference.MOD_ID, "vex_feather").setUnlocalizedName(Reference.MOD_ID + ".vex_feather").setCreativeTab(ModItems.CREATIVE_TAB));
+        event.getRegistry().register(new Item().setRegistryName(Reference.MOD_ID, "bismite").setTranslationKey(Reference.MOD_ID + ".bismite").setCreativeTab(ModItems.CREATIVE_TAB));
+        event.getRegistry().register(new Item().setRegistryName(Reference.MOD_ID, "vex_feather").setTranslationKey(Reference.MOD_ID + ".vex_feather").setCreativeTab(ModItems.CREATIVE_TAB));
         Items.FIREWORKS.setCreativeTab(CreativeTabs.MISC); // please and thank you
     }
 

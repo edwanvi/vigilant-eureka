@@ -36,7 +36,7 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
 
     public MovingCastleDoor() {
         super(Material.WOOD, "movingdoor");
-        setUnlocalizedName(Reference.MOD_ID + ".movingdoor");
+        setTranslationKey(Reference.MOD_ID + ".movingdoor");
         setRegistryName("movingdoor");
         setCreativeTab(ModItems.CREATIVE_TAB);
     }
@@ -79,7 +79,7 @@ public class MovingCastleDoor extends BlockTileEntity<MovingCastleDoorTile> {
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (!worldIn.isRemote && state.getValue(IS_TOP)) {
             MovingCastleDoorTile t;
             if (worldIn.isAreaLoaded(pos, 16)) {

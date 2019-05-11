@@ -39,7 +39,7 @@ public class ModItems {
 
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs("vigilantEureka") {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(dimKey);
         }
     };
