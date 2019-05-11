@@ -22,13 +22,13 @@ public class BlockJar extends BlockTileEntity<JarTile> {
 
     public BlockJar() {
         super(Material.GLASS, "vexjar");
-        setUnlocalizedName(Reference.MOD_ID + ".vexjar");
+        setTranslationKey(Reference.MOD_ID + ".vexjar");
         setRegistryName("vexjar");
         setCreativeTab(ModItems.CREATIVE_TAB);
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (entityIn instanceof EntityVex && !worldIn.isRemote) {
             entityIn.attackEntityFrom(DamageSource.CRAMMING, ((EntityVex) entityIn).getHealth());
             TileEntity tile = worldIn.getTileEntity(pos);
