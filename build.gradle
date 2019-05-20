@@ -42,6 +42,14 @@ minecraft {
     }
 }
 
+repositories {
+    maven {
+        //Baubles
+        name = 'thiakil'
+        url = 'https://maven.thiakil.com'
+    }
+}
+
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -63,7 +71,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    compile files('libs/Baubles-deobf.jar')
+    deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
 }
 
 processResources {
