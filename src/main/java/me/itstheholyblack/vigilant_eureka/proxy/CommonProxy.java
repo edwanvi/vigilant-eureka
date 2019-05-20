@@ -3,6 +3,7 @@ package me.itstheholyblack.vigilant_eureka.proxy;
 import com.google.common.collect.ImmutableMap;
 import me.itstheholyblack.vigilant_eureka.Reference;
 import me.itstheholyblack.vigilant_eureka.blocks.*;
+import me.itstheholyblack.vigilant_eureka.blocks.tiles.JarTile;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.LeyLineTile;
 import me.itstheholyblack.vigilant_eureka.blocks.tiles.MovingCastleDoorTile;
 import me.itstheholyblack.vigilant_eureka.capabilities.CapAdder;
@@ -75,11 +76,13 @@ public class CommonProxy {
         event.getRegistry().register(new MovingCastleDoor());
         event.getRegistry().register(new BlockBismuthOre());
         event.getRegistry().register(new BlockLeyLine());
+        event.getRegistry().register(new BlockJar());
     }
 
     private static void registerTiles() {
         GameRegistry.registerTileEntity(MovingCastleDoorTile.class, new ResourceLocation(Reference.MOD_ID, "castledoor"));
         GameRegistry.registerTileEntity(LeyLineTile.class, new ResourceLocation(Reference.MOD_ID, "leytile"));
+        GameRegistry.registerTileEntity(JarTile.class, new ResourceLocation(Reference.MOD_ID, "jartile"));
     }
 
     @SubscribeEvent
@@ -88,8 +91,12 @@ public class CommonProxy {
                 .register(new ItemBlock(ModBlocks.firstBlock).setRegistryName(ModBlocks.firstBlock.getRegistryName()));
         event.getRegistry()
                 .register(new ItemBlock(ModBlocks.movingdoor).setRegistryName(ModBlocks.movingdoor.getRegistryName()).setMaxStackSize(16)); // shoot me
-        event.getRegistry().register(new ItemBlock(ModBlocks.bismuthOre).setRegistryName(ModBlocks.bismuthOre.getRegistryName()));
-        event.getRegistry().register(new ItemBlock(ModBlocks.leyLine).setRegistryName(ModBlocks.leyLine.getRegistryName()));
+        event.getRegistry()
+                .register(new ItemBlock(ModBlocks.bismuthOre).setRegistryName(ModBlocks.bismuthOre.getRegistryName()));
+        event.getRegistry()
+                .register(new ItemBlock(ModBlocks.leyLine).setRegistryName(ModBlocks.leyLine.getRegistryName()));
+        event.getRegistry()
+                .register(new ItemBlock(ModBlocks.blockJar).setRegistryName(ModBlocks.blockJar.getRegistryName()).setMaxStackSize(1));
         event.getRegistry().register(new DimKey());
         event.getRegistry().register(new WarpBoots());
         event.getRegistry().register(new InvisCap());
