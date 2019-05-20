@@ -2,11 +2,8 @@ package me.itstheholyblack.vigilant_eureka.entity;
 
 import com.google.common.base.Optional;
 import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
-import me.itstheholyblack.vigilant_eureka.network.PacketHandler;
-import me.itstheholyblack.vigilant_eureka.network.PacketUpdateGhostly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;

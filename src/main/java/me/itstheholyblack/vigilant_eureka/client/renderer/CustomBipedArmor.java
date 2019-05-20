@@ -1,14 +1,8 @@
 package me.itstheholyblack.vigilant_eureka.client.renderer;
 
 import me.itstheholyblack.vigilant_eureka.capabilities.GhostlyCapability;
-import me.itstheholyblack.vigilant_eureka.items.ModItems;
-import me.itstheholyblack.vigilant_eureka.util.NBTUtil;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
